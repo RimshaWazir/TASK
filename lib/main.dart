@@ -1,9 +1,8 @@
 import 'dart:developer';
 
-import 'package:dummy/Model/dummy_model.dart';
 import 'package:dummy/Repository/dummy_repo.dart';
 import 'package:dummy/cubit/dummy_cubit.dart';
-import 'package:dummy/cubit/dummy_event.dart';
+
 import 'package:dummy/cubit/dummy_state.dart';
 
 import 'package:flutter/material.dart';
@@ -25,7 +24,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         home: BlocProvider(
-          create: (context) => CategoryBloc(DummyRepository()),
+          create: (context) => DummyCubit(DummyRepository()),
           child: const CategoryListView(),
         ));
   }
@@ -43,7 +42,7 @@ class _CategoryListViewState extends State<CategoryListView> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<CategoryBloc>(context).add(FetchCategories());
+    context.read<DummyCubit>().fetchCategories();
   }
 
   @override
@@ -52,7 +51,12 @@ class _CategoryListViewState extends State<CategoryListView> {
       appBar: AppBar(
         title: const Text('Product Categories Task'),
       ),
-      body: BlocBuilder<CategoryBloc, CategoryState>(
+      body: BlocConsumer<DummyCubit, DummyState>(
+        listener: (BuildContext context, state) {
+          if (state is CategoryLoading) {
+            const CircularProgressIndicator();
+          }
+        },
         builder: (context, state) {
           log(state.toString());
           if (state is CategoryLoading) {

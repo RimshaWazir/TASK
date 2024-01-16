@@ -1,19 +1,20 @@
 import 'package:dummy/Repository/dummy_repo.dart';
-import 'package:dummy/cubit/dummy_event.dart';
+
 import 'package:dummy/cubit/dummy_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
+class DummyCubit extends Cubit<DummyState> {
   final DummyRepository repository;
+  DummyCubit(this.repository) : super(CategoryLoading());
 
-  CategoryBloc(this.repository) : super(CategoryLoading()) {
-    on<FetchCategories>((event, emit) async {
-      try {
-        var categories = await repository.fetchData();
-        emit(CategoryLoaded(categories));
-      } catch (e) {
-        emit(CategoryError());
-      }
-    });
+  fetchCategories() async {
+    await Future.delayed(Duration.zero);
+    emit(CategoryLoading());
+    try {
+      var categories = await repository.fetchData();
+      emit(CategoryLoaded(categories));
+    } catch (e) {
+      emit(CategoryError());
+    }
   }
 }

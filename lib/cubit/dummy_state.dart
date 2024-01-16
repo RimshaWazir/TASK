@@ -1,14 +1,14 @@
 import 'package:dummy/Model/dummy_model.dart';
 
-abstract class CategoryState {}
+abstract class DummyState {}
 
-class CategoryLoading extends CategoryState {}
+class CategoryLoading extends DummyState {}
 
-class CategoryLoaded extends CategoryState {
+class CategoryLoaded extends DummyState {
   final List<DummyModel> categories;
   CategoryLoaded(this.categories);
 }
 
-class CategoryError extends CategoryState {
+class CategoryError extends DummyState {
   CategoryError();
 }
