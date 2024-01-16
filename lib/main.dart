@@ -52,17 +52,28 @@ class _CategoryListViewState extends State<CategoryListView> {
         title: const Text('Product Categories Task'),
       ),
       body: BlocConsumer<DummyCubit, DummyState>(
-        listener: (BuildContext context, state) {
-          if (state is CategoryLoading) {
-            const CircularProgressIndicator();
+        listener: (context, state) {
+          if (state is CategoryError) {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return const AlertDialog(
+                  title: Text('Error'),
+                  content: Text('An error occurred'),
+                );
+              },
+            );
+          } else {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            }
           }
         },
         builder: (context, state) {
           log(state.toString());
           if (state is CategoryLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state is CategoryError) {
-            return const Center(child: Text('Error'));
           } else if (state is CategoryLoaded) {
             return ListView.builder(
               itemCount: state.categories.length,
