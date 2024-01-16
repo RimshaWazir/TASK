@@ -53,6 +53,18 @@ class _CategoryListViewState extends State<CategoryListView> {
       ),
       body: BlocConsumer<DummyCubit, DummyState>(
         listener: (context, state) {
+          if (state is CategoryLoading) {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return const AlertDialog(
+                  content: CircularProgressIndicator(),
+                );
+              },
+            );
+          }
+
           if (state is CategoryError) {
             showDialog(
               context: context,
@@ -71,10 +83,7 @@ class _CategoryListViewState extends State<CategoryListView> {
           }
         },
         builder: (context, state) {
-          log(state.toString());
-          if (state is CategoryLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is CategoryLoaded) {
+          if (state is CategoryLoaded) {
             return ListView.builder(
               itemCount: state.categories.length,
               itemBuilder: (context, index) {
