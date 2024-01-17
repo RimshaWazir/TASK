@@ -90,42 +90,41 @@ class _CategoryListViewState extends State<CategoryListView> {
             return [];
           },
           builder: (context, categories) {
-            if (state is CategoryLoaded) {
-              return ListView.builder(
-                itemCount: state.categories.length,
-                itemBuilder: (context, index) {
-                  var category = state.categories[index];
-                  return ExpansionTile(
-                    title: Text(category.title!),
-                    children: category.subCategories!.map((subCategory) {
-                      return ExpansionTile(
-                        title: Text(subCategory.title!),
-                        children: subCategory.childSubCategories!
-                            .map((childSubCategory) {
-                          return ExpansionTile(
-                            title: Text(childSubCategory.title!),
-                            children: childSubCategory.deepChildSubCategory!
-                                .map((deepChild) {
-                              return ExpansionTile(
-                                title: Text(deepChild.title!),
-                                children: deepChild.products!.map((product) {
-                                  return ListTile(
-                                    title: Text(product.productName!),
-                                    subtitle: Text('Price: ${product.price}'),
-                                  );
-                                }).toList(),
-                              );
-                            }).toList(),
-                          );
-                        }).toList(),
-                      );
-                    }).toList(),
-                  );
-                },
-              );
-            } else {
+            if (categories.isEmpty) {
               return const Center(child: Text('No data available'));
             }
+            return ListView.builder(
+              itemCount: categories.length,
+              itemBuilder: (context, index) {
+                var category = categories[index];
+                return ExpansionTile(
+                  title: Text(category.title!),
+                  children: category.subCategories!.map((subCategory) {
+                    return ExpansionTile(
+                      title: Text(subCategory.title!),
+                      children: subCategory.childSubCategories!
+                          .map((childSubCategory) {
+                        return ExpansionTile(
+                          title: Text(childSubCategory.title!),
+                          children: childSubCategory.deepChildSubCategory!
+                              .map((deepChild) {
+                            return ExpansionTile(
+                              title: Text(deepChild.title!),
+                              children: deepChild.products!.map((product) {
+                                return ListTile(
+                                  title: Text(product.productName!),
+                                  subtitle: Text('Price: ${product.price}'),
+                                );
+                              }).toList(),
+                            );
+                          }).toList(),
+                        );
+                      }).toList(),
+                    );
+                  }).toList(),
+                );
+              },
+            );
           },
         );
       }),
