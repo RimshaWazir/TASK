@@ -1,10 +1,13 @@
+import 'dart:ffi';
+
 import 'package:dummy/Repository/dummy_repo.dart';
 import 'package:dummy/Screens/category_screen.dart';
 import 'package:dummy/Screens/product_detail.dart';
 import 'package:dummy/cubit/dummy_cubit.dart';
-
 import 'package:dummy/dynamic_links.dart';
+
 import 'package:dummy/firebase_options.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,7 +29,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      DynamicLinks().initDynamicsLinks(context);
+      DynamicLinks.initDynamicLink(context);
     });
     super.initState();
   }
