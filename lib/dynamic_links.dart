@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:dummy/Model/dummy_model.dart';
+import 'package:dummy/Domain/Model/category_model.dart';
 import 'package:dummy/Screens/product_detail.dart';
 
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 
 class DynamicLinks {
   ///DYNAMIC LINKS CREATION
-  static Future<String> createDynamicLink(DummyModel item) async {
+  static Future<String> createDynamicLink(CategoryModel item) async {
     final parameters = DynamicLinkParameters(
       uriPrefix: "https://itecexpert.page.link",
       link: Uri.parse(

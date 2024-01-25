@@ -1,7 +1,7 @@
-import 'package:dummy/Model/dummy_model.dart';
+import 'package:dummy/Domain/Model/category_model.dart';
 import 'package:dummy/Screens/product_detail.dart';
-import 'package:dummy/cubit/dummy_cubit.dart';
-import 'package:dummy/cubit/dummy_state.dart';
+import 'package:dummy/cubit/category_cubit.dart';
+import 'package:dummy/cubit/category_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,7 +15,7 @@ class CategoryListView extends StatefulWidget {
 class _CategoryListViewState extends State<CategoryListView> {
   @override
   void initState() {
-    context.read<DummyCubit>().fetchCategories();
+    context.read<CategoryCubit>().fetchCategories();
     super.initState();
   }
 
@@ -25,7 +25,8 @@ class _CategoryListViewState extends State<CategoryListView> {
       appBar: AppBar(
         title: const Text('Product Categories Task'),
       ),
-      body: BlocConsumer<DummyCubit, DummyState>(listener: (context, state) {
+      body: BlocConsumer<CategoryCubit, CategoryState>(
+          listener: (context, state) {
         if (state is CategoryLoading) {
           showDialog(
             context: context,
@@ -55,7 +56,7 @@ class _CategoryListViewState extends State<CategoryListView> {
           }
         }
       }, builder: (context, state) {
-        return BlocSelector<DummyCubit, DummyState, List<DummyModel>>(
+        return BlocSelector<CategoryCubit, CategoryState, List<CategoryModel>>(
           selector: (state) {
             if (state is CategoryLoaded) {
               return state.categories;

@@ -1,14 +1,12 @@
-import 'dart:developer';
-
-import 'package:dummy/Model/dummy_model.dart';
+import 'package:dummy/Domain/Model/category_model.dart';
 import 'package:dummy/dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ProductDetailScreen extends StatelessWidget {
-  String? id;
+  final String? id;
 
-  ProductDetailScreen({
+  const ProductDetailScreen({
     Key? key,
     this.id,
   }) : super(key: key);
@@ -24,7 +22,7 @@ class ProductDetailScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          DynamicLinks.createDynamicLink(DummyModel(id: id)).then((value) {
+          DynamicLinks.createDynamicLink(CategoryModel(id: id)).then((value) {
             Share.share(value);
           });
         },

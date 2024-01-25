@@ -1,6 +1,6 @@
-import 'package:dummy/Model/dummy_model.dart';
+import 'package:dummy/Domain/Model/category_model.dart';
 
-class DummyRepository {
+class CategoryRepository {
   final List<Map<String, dynamic>> _dummy_list = [
     {
       "_id": "6593d11d52c2d9c77d954e2c",
@@ -234,9 +234,9 @@ class DummyRepository {
     }
   ];
 
-  Future<List<DummyModel>> fetchData() async {
+  Future<List<CategoryModel>> fetchData() async {
     return Future.delayed(const Duration(seconds: 2), () {
-      return _dummy_list.map((item) => DummyModel.fromJson(item)).toList();
+      return _dummy_list.map((item) => CategoryModel.fromJson(item)).toList();
     });
   }
 }
