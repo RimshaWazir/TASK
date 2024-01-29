@@ -97,6 +97,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
                         children: [
                           SvgPicture.asset(
                             "assets/images/home.svg",
+                            color: state == 0 ? Colors.blue : Colors.black,
                           ),
                           Text("Home",
                               style: TextStyles.selectedAndUnseletedStyle(
@@ -119,6 +120,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
                         children: [
                           SvgPicture.asset(
                             "assets/images/project.svg",
+                            color: state == 1 ? Colors.blue : Colors.black,
                           ),
                           Text("Projects",
                               style: TextStyles.selectedAndUnseletedStyle(
@@ -142,6 +144,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
                         children: [
                           SvgPicture.asset(
                             "assets/images/calendar.svg",
+                            color: state == 2 ? Colors.blue : Colors.black,
                           ),
                           Text("Calender",
                               style: TextStyles.selectedAndUnseletedStyle(
@@ -165,6 +168,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
                         children: [
                           SvgPicture.asset(
                             "assets/images/message.svg",
+                            color: state == 3 ? Colors.blue : Colors.black,
                           ),
                           Text("Messages",
                               style: TextStyles.selectedAndUnseletedStyle(
@@ -186,6 +190,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
                         children: [
                           SvgPicture.asset(
                             "assets/images/task.svg",
+                            color: state == 4 ? Colors.blue : Colors.black,
                           ),
                           Text("Tasks",
                               style: TextStyles.selectedAndUnseletedStyle(
