@@ -1,10 +1,9 @@
 import 'package:dummy/Data/AppData/app_providers.dart';
-import 'package:dummy/Data/DataSource/Repository/category_repo.dart';
 import 'package:dummy/Presentation/Widgets/Auth/login.dart';
-import 'package:dummy/Presentation/Widgets/Dashboard/dashboard.dart';
+import 'package:dummy/Presentation/Widgets/Auth/phone.dart';
+import 'package:dummy/Presentation/Widgets/Dashboard/BottomNavigation/bottom_navigation.dart';
 import 'package:dummy/Screens/category_screen.dart';
 import 'package:dummy/Screens/product_detail.dart';
-import 'package:dummy/cubit/category_cubit.dart';
 import 'package:dummy/dynamic_links.dart';
 
 import 'package:dummy/firebase_options.dart';
@@ -47,6 +46,8 @@ class _MyAppState extends State<MyApp> {
             title: 'Message App',
             routes: {
               "/product_detail": (context) => const ProductDetailScreen(),
+              "/login": (context) => const LoginScreen(),
+              "/bottom_navigation": (context) => const BottomNavigationScreen(),
               "/category_screen": (context) => const CategoryListView(),
             },
             theme: ThemeData(
