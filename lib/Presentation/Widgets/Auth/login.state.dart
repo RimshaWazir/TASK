@@ -1,19 +1,32 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-abstract class LoginState {}
+abstract class LoginAuthState {}
 
-class LoginInitial extends LoginState {}
+class AuthInitial extends LoginAuthState {}
 
-class LoginLoading extends LoginState {}
+class AuthLoading extends LoginAuthState {}
 
-class LoginSuccess extends LoginState {
+class AuthSuccess extends LoginAuthState {
   final User user;
 
-  LoginSuccess(this.user);
+  AuthSuccess(this.user);
 }
 
-class LoginError extends LoginState {
+class AuthError extends LoginAuthState {
   final String errorMessage;
 
-  LoginError(this.errorMessage);
+  AuthError(this.errorMessage);
+}
+
+class AuthCodeSent extends LoginAuthState {
+  final String verificationId;
+  final int resendToken;
+
+  AuthCodeSent(this.verificationId, this.resendToken);
+}
+
+class AuthVerificationCompleted extends LoginAuthState {
+  final AuthCredential credential;
+
+  AuthVerificationCompleted(this.credential);
 }

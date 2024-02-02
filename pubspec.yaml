@@ -46,6 +46,8 @@ dependencies:
   flutter_svg: ^2.0.9
   google_sign_in: ^6.2.1
   firebase_auth: ^4.16.0
+  shared_preferences: ^2.2.2
+  cloud_firestore: ^4.15.0
   
 
 dev_dependencies:

@@ -1,31 +1,40 @@
-import 'package:dummy/Application/Services/Navigation/navigation.dart';
-import 'package:dummy/Presentation/Widgets/Dashboard/BottomNavigation/bottom_navigation.dart';
+import 'dart:developer';
+
+import 'package:dummy/Application/Services/Auth/auth_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginRepository {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
+class AuthRepository {
+  final AuthService _authService;
+  AuthRepository(this._authService);
   Future<User?> signInWithGoogle() async {
-    try {
-      GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
-      UserCredential userCredential =
-          await _auth.signInWithProvider(googleAuthProvider);
+    User? user = await _authService.signInWithGoogle();
 
-      User? user = userCredential.user;
-
-      if (user != null) {
-        print("User is not null");
-        Future.delayed(Duration.zero, () {
-          // Navigate.toReplace(context, const BottomNavigationScreen());
-        });
-      } else {
-        print("User is null");
-      }
-      return user;
-    } catch (error) {
-      print(error);
-      return null;
+    if (user != null) {
+      await saveUserDataInPreferences("user_id", user.uid);
     }
+    return user;
+  }
+
+  Future<void> saveUserDataInPreferences(String key, String value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(key, value);
+  }
+
+  Future<String?> getUserDataFromPreferences(String key) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(key);
+  }
+
+  Future<void> signInWithPhoneNumber(
+    String phoneNumber, {
+    required Function(AuthCredential) onVerificationCompleted,
+    required Function(String, int) onCodeSent,
+  }) async {
+    await _authService.signInWithPhoneNumber(
+      phoneNumber,
+      onVerificationCompleted: onVerificationCompleted,
+      onCodeSent: onCodeSent,
+    );
   }
 }

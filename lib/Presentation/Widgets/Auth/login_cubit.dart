@@ -1,25 +1,48 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:developer';
+
 import 'package:dummy/Data/DataSource/Repository/Auth/login_repo.dart';
 import 'package:dummy/Presentation/Widgets/Auth/login.state.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LoginCubit extends Cubit<LoginState> {
-  final LoginRepository repository = LoginRepository();
+class LoginCubit extends Cubit<LoginAuthState> {
+  final AuthRepository _authRepository;
 
-  LoginCubit(repository) : super(LoginInitial());
+  LoginCubit(this._authRepository) : super(AuthInitial());
 
-  Future<void> handleGoogleSignIn() async {
-    emit(LoginLoading());
+  Future<void> signInWithGoogle() async {
+    emit(AuthLoading());
 
     try {
-      final user = await repository.signInWithGoogle();
-      print(user);
+      final user = await _authRepository.signInWithGoogle();
+
       if (user != null) {
-        emit(LoginSuccess(user));
+        emit(AuthSuccess(user));
       } else {
-        emit(LoginError("Failed to sign in with Google"));
+        emit(AuthError("Sign-in with Google failed"));
       }
     } catch (error) {
-      emit(LoginError("An error occurred: $error"));
+      emit(AuthError("An error occurred: $error"));
+    }
+  }
+
+  Future<void> signInWithPhoneNumber(String phoneNumber) async {
+    try {
+      await _authRepository.signInWithPhoneNumber(
+        phoneNumber,
+        onVerificationCompleted: (credential) {
+          emit(AuthVerificationCompleted(credential));
+        },
+        onCodeSent: (verificationId, resendToken) {
+          emit(AuthCodeSent(verificationId, resendToken));
+          print("code sent");
+        },
+      );
+      User? user = FirebaseAuth.instance.currentUser;
+      emit(AuthSuccess(user!));
+    } catch (e) {
+      emit(AuthError(e.toString()));
     }
   }
 }

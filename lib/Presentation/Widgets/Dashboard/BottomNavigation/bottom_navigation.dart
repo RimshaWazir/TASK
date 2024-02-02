@@ -4,7 +4,7 @@ import 'package:dummy/Presentation/Widgets/Messages/messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'Controller/BottomNavigationNotifier/bottom_navigation_notifier.dart';
 
 class BottomNavigationScreen extends StatefulWidget {
@@ -63,7 +63,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
               DashboardScreen(),
               DashboardScreen(),
               DashboardScreen(),
-              const MessagesScreen(),
+              MessagesScreen(),
               DashboardScreen(),
             ],
           ),
