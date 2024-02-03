@@ -1,20 +1,49 @@
 import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  static Future<User?> signInWithGoogle() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    await auth.signOut();
+    User? user;
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    await googleSignIn.signOut();
+    final GoogleSignInAccount? googleSignInAccount =
+        await googleSignIn.signIn();
+    if (googleSignInAccount != null) {
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
 
-  Future<User?> signInWithGoogle() async {
-    try {
-      GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
-      UserCredential userCredential =
-          await _auth.signInWithProvider(googleAuthProvider);
+      try {
+        final UserCredential userCredential =
+            await auth.signInWithCredential(credential);
 
-      return userCredential.user;
-    } catch (error) {
-      print(error);
-      return null;
+        user = userCredential.user;
+        firestore.collection("users").doc(userCredential.user!.uid).set({
+          'uuid': user!.uid,
+          'email': user.email,
+          'displayName': user.displayName ?? '',
+          'photoURL': user.photoURL,
+        }, SetOptions(merge: true));
+        log('user$user');
+        return user;
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'account-exists-with-different-credential') {
+          log('Error');
+        } else if (e.code == 'invalid-credential') {
+          log('Invalid Cred error');
+        }
+      }
     }
+    return null;
   }
 
   Future<void> signInWithPhoneNumber(

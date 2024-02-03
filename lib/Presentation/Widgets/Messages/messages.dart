@@ -19,8 +19,6 @@ class _MessagesScreenState extends State<MessagesScreen> {
   final CollectionReference<Map<String, dynamic>> messagesCollection =
       FirebaseFirestore.instance.collection('messages');
 
-  final TextEditingController _messageController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,98 +85,6 @@ class _MessagesScreenState extends State<MessagesScreen> {
                     );
                   })),
         ],
-      ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Padding(
-          padding:
-              const EdgeInsets.only(left: 10, right: 10, bottom: 10, top: 0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.black12)),
-                height: 0.07.sh,
-                width: 0.75.sw,
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        "assets/images/smile.svg",
-                        height: 20,
-                        width: 20,
-                      ),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: TextField(
-                          onTap: () {
-                            setState(() {
-                              isTextFieldFocused = true;
-                            });
-                          },
-                          onEditingComplete: () {
-                            setState(() {
-                              isTextFieldFocused = false;
-                            });
-                          },
-                          decoration: InputDecoration(
-                            fillColor: Colors.white,
-                            filled: true,
-                            hintText: "Message...",
-                            contentPadding: EdgeInsets.all(9.sp),
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                      Image.asset(
-                        "assets/images/image.png",
-                        height: 20,
-                        width: 20,
-                      ),
-                      const SizedBox(width: 6),
-                      SvgPicture.asset(
-                        "assets/images/camera.svg",
-                        height: 20,
-                        width: 20,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                width: 50,
-                height: 50,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.blue,
-                ),
-                child: Center(
-                  child: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        String messageText = _messageController.text.trim();
-                        if (messageText.isNotEmpty) {
-                          messagesCollection.add({
-                            'text': messageText,
-                            'isCurrentUser': true,
-                            'timestamp': DateTime.now().toString(),
-                          });
-                          _messageController.clear();
-                        }
-                      });
-                    },
-                    icon: Icon(
-                        isTextFieldFocused ? Icons.send : Icons.attachment),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

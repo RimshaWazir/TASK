@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:dummy/Application/Services/Auth/auth_services.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -8,7 +7,7 @@ class AuthRepository {
   final AuthService _authService;
   AuthRepository(this._authService);
   Future<User?> signInWithGoogle() async {
-    User? user = await _authService.signInWithGoogle();
+    User? user = await AuthService.signInWithGoogle();
 
     if (user != null) {
       await saveUserDataInPreferences("user_id", user.uid);

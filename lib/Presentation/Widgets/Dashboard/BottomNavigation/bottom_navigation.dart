@@ -59,11 +59,11 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
             onPageChanged: (x) {
               BottomNotifier.bottomNavigationNotifier.value = x;
             },
-            children: [
+            children: const [
               DashboardScreen(),
               DashboardScreen(),
               DashboardScreen(),
-              MessagesScreen(),
+              DashboardScreen(),
               DashboardScreen(),
             ],
           ),

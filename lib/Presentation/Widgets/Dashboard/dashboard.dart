@@ -2,10 +2,12 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dummy/Application/Services/Navigation/navigation.dart';
+import 'package:dummy/Data/DataSource/Repository/Auth/login_repo.dart';
 import 'package:dummy/Data/DataSource/Resources/sized_box.dart';
 import 'package:dummy/Data/DataSource/Resources/text_styles.dart';
 
 import 'package:dummy/Presentation/Widgets/Messages/messages.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -16,6 +18,8 @@ class DashboardScreen extends StatefulWidget {
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
+
+FirebaseAuth auth = FirebaseAuth.instance;
 
 class _DashboardScreenState extends State<DashboardScreen> {
   final List<String> names = [
@@ -39,12 +43,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   ];
   @override
   void initState() {
-    getUsersFromFirestore();
+    // getUsersFromFirestore();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    log(auth.toString());
     return SafeArea(
       child: Scaffold(
         backgroundColor: const Color.fromARGB(255, 245, 245, 245),
@@ -163,78 +168,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ],
                 ),
                 Expanded(
-                    child: FutureBuilder(
-                  future: getUsersFromFirestore(),
+                    child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection("users")
+                      .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator(); // You can replace this with a loading indicator
+                      return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Text('No users found');
+                    } else if (!snapshot.hasData ||
+                        snapshot.data!.docs.isEmpty) {
+                      return const Center(child: Text('No users found'));
                     } else {
-                      List<User> userList = snapshot.data!;
-                      return ListView.separated(
-                          separatorBuilder: (context, index) {
-                            return const SizedBox();
-                          },
-                          itemCount: userList.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              tileColor: Colors.greenAccent,
-                              onTap: () {
-                                Navigate.to(context, const MessagesScreen());
-                              },
-                              contentPadding: const EdgeInsets.all(0),
-                              // leading: SizedBox(
-                              //   child: Image.asset(
-                              //     images[index],
-                              //     fit: BoxFit.contain,
-                              //   ),
-                              // ),
-                              title: Text(
-                                'Person Name ${userList[index].displayName}',
-                                style:
-                                    TextStyles.urbanist(context, fontSize: 18),
-                              ),
-                              subtitle: Text(
-                                'Message preview $index',
-                                style: TextStyles.urbanistMed(
-                                  context,
-                                  color: const Color(0xff272727),
-                                ),
-                              ),
-                              trailing: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  if (index == 2 || index == 3)
-                                    Container(
-                                      height: 25,
-                                      width: 25,
-                                      decoration: const BoxDecoration(
-                                        color: Colors.blue,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          "3",
-                                          style: TextStyles.urbanist(context,
-                                              color: Colors.white,
-                                              fontSize: 10.sp,
-                                              fontWeight: FontWeight.w400),
-                                        ),
-                                      ),
-                                    ),
-                                  Text(
-                                    '10:00',
-                                    style: TextStyles.urbanistMed(
-                                      context,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          });
+                      return ListView(
+                        children: snapshot.data!.docs
+                            .map<Widget>((doc) => buildUserListItem(doc))
+                            .toList(),
+                      );
                     }
                   },
                 )),
@@ -245,36 +196,67 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
-}
 
-class User {
-  final String uid;
-  final String displayName;
-  final String email;
-
-  User({required this.uid, required this.displayName, required this.email});
-
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      uid: json['uid'] ?? '',
-      displayName: json['displayName'] ?? '',
-      email: json['email'] ?? '',
-    );
-  }
-}
-
-Future<List<User>> getUsersFromFirestore() async {
-  List<User> userList = [];
-  try {
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('users').get();
-    for (QueryDocumentSnapshot document in querySnapshot.docs) {
-      User user = User.fromJson(document.data() as Map<String, dynamic>);
-      userList.add(user);
+  Widget buildUserListItem(DocumentSnapshot document) {
+    Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+    if (auth.currentUser!.email != data['email']) {
+      return ListTile(
+        onTap: () {
+          Navigate.to(context, const MessagesScreen());
+        },
+        contentPadding: const EdgeInsets.all(0),
+        leading: Container(
+          decoration: const BoxDecoration(shape: BoxShape.circle),
+          child: ClipOval(
+            child: Image.network(
+              data['photoURL'],
+              height: 50,
+              width: 50,
+            ),
+          ),
+        ),
+        title: Text(
+          data['displayName'],
+          style: TextStyles.urbanist(context, fontSize: 18),
+        ),
+        subtitle: Text(
+          'Message preview ',
+          style: TextStyles.urbanistMed(
+            context,
+            color: const Color(0xff272727),
+          ),
+        ),
+        trailing: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              height: 25,
+              width: 25,
+              decoration: const BoxDecoration(
+                color: Colors.blue,
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Text(
+                  "3",
+                  style: TextStyles.urbanist(context,
+                      color: Colors.white,
+                      fontSize: 10.sp,
+                      fontWeight: FontWeight.w400),
+                ),
+              ),
+            ),
+            Text(
+              '10:00',
+              style: TextStyles.urbanistMed(
+                context,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Container();
     }
-    return userList;
-  } catch (error) {
-    print(error);
-    return [];
   }
 }
