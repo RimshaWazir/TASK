@@ -6,7 +6,7 @@ import 'package:dummy/Presentation/Widgets/Dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-Widget buildMessageItem(
+Widget _buildMessageItem(
     DocumentSnapshot documentSnapshot, BuildContext context) {
   Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
   var timestamp = data["timestamp"] as Timestamp;
