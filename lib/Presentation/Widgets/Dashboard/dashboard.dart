@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dummy/Application/Services/Navigation/navigation.dart';
-import 'package:dummy/Data/DataSource/Repository/Auth/login_repo.dart';
+import 'package:dummy/Data/DataSource/Repository/Auth/auth_repo.dart';
 import 'package:dummy/Data/DataSource/Resources/sized_box.dart';
 import 'package:dummy/Data/DataSource/Resources/text_styles.dart';
 
@@ -129,7 +129,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     Gap.verticalSpace(24),
                     SizedBox(
-                      height: 0.11.sh,
+                      height: 0.16.sh,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: images.length,
@@ -146,6 +146,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     fit: BoxFit.contain,
                                   ),
                                 ),
+                                Gap.verticalSpace(5),
                                 Text(
                                   names[index],
                                   style: TextStyles.urbanistLar(context,
@@ -158,7 +159,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         },
                       ),
                     ),
-                    Gap.verticalSpace(24),
                     Text(
                       "Messages",
                       style: TextStyles.urbanistLar(
@@ -202,7 +202,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (auth.currentUser!.email != data['email']) {
       return ListTile(
         onTap: () {
-          Navigate.to(context, const MessagesScreen());
+          Navigate.to(context,
+              MessagesScreen(name: data["displayName"], uuid: data["uuid"]));
         },
         contentPadding: const EdgeInsets.all(0),
         leading: Container(

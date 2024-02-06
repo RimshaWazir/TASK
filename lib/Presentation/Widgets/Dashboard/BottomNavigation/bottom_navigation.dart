@@ -20,10 +20,8 @@ class BottomNavigationScreen extends StatefulWidget {
 }
 
 class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
-  ValueNotifier<bool>? showBottomNavigation;
   @override
   void initState() {
-    showBottomNavigation = ValueNotifier<bool>(true);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       BottomNotifier.bottomNavigationNotifier.value = 0;
     });
@@ -31,20 +29,13 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
     BottomNotifier.bottomPageController =
         PageController(initialPage: widget.initialPage ?? 0);
     BottomNotifier.checkExitTimes.value = 2;
-    BottomNotifier.bottomNavigationNotifier.addListener(() {
-      final bool shouldShow =
-          BottomNotifier.bottomNavigationNotifier.value != 3;
-      if (showBottomNavigation!.value != shouldShow) {
-        showBottomNavigation!.value = shouldShow;
-      }
-    });
+    BottomNotifier.bottomNavigationNotifier.addListener(() {});
 
     super.initState();
   }
 
   @override
   void dispose() {
-    showBottomNavigation!.dispose();
     super.dispose();
   }
 
@@ -68,143 +59,137 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
             ],
           ),
         ),
-        bottomNavigationBar: ValueListenableBuilder(
-          valueListenable: showBottomNavigation!,
-          builder: (context, show, child) {
-            return show ? child! : const SizedBox.shrink();
-          },
-          child: BottomAppBar(
-            surfaceTintColor: Colors.white,
-            height: 70,
-            elevation: 9,
-            color: Colors.white,
-            shape: const CircularNotchedRectangle(),
-            child: ValueListenableBuilder(
-              builder: (context, state, ss) {
-                return Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () {
-                        if (state != 0) {
-                          BottomNotifier.bottomPageController!.jumpToPage(0);
-                          BottomNotifier.bottomNavigationNotifier.value = 0;
-                        }
-                      },
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SvgPicture.asset(
-                            "assets/images/home.svg",
-                            color: state == 0 ? Colors.blue : Colors.black,
-                          ),
-                          Text("Home",
-                              style: TextStyles.selectedAndUnseletedStyle(
-                                context,
-                                color: state == 0 ? Colors.blue : Colors.black,
-                              )),
-                        ],
-                      ),
+        bottomNavigationBar: BottomAppBar(
+          surfaceTintColor: Colors.white,
+          height: 70,
+          elevation: 9,
+          color: Colors.white,
+          shape: const CircularNotchedRectangle(),
+          child: ValueListenableBuilder(
+            builder: (context, state, ss) {
+              return Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
+                      if (state != 0) {
+                        BottomNotifier.bottomPageController!.jumpToPage(0);
+                        BottomNotifier.bottomNavigationNotifier.value = 0;
+                      }
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SvgPicture.asset(
+                          "assets/images/home.svg",
+                          color: state == 0 ? Colors.blue : Colors.black,
+                        ),
+                        Text("Home",
+                            style: TextStyles.selectedAndUnseletedStyle(
+                              context,
+                              color: state == 0 ? Colors.blue : Colors.black,
+                            )),
+                      ],
                     ),
+                  ),
 
-                    GestureDetector(
-                      onTap: () {
-                        if (state != 1) {
-                          BottomNotifier.bottomPageController!.jumpToPage(1);
-                          BottomNotifier.bottomNavigationNotifier.value = 1;
-                        }
-                      },
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SvgPicture.asset(
-                            "assets/images/project.svg",
-                            color: state == 1 ? Colors.blue : Colors.black,
-                          ),
-                          Text("Projects",
-                              style: TextStyles.selectedAndUnseletedStyle(
-                                context,
-                                color: state == 1 ? Colors.blue : Colors.black,
-                              )),
-                        ],
-                      ),
+                  GestureDetector(
+                    onTap: () {
+                      if (state != 1) {
+                        BottomNotifier.bottomPageController!.jumpToPage(1);
+                        BottomNotifier.bottomNavigationNotifier.value = 1;
+                      }
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SvgPicture.asset(
+                          "assets/images/project.svg",
+                          color: state == 1 ? Colors.blue : Colors.black,
+                        ),
+                        Text("Projects",
+                            style: TextStyles.selectedAndUnseletedStyle(
+                              context,
+                              color: state == 1 ? Colors.blue : Colors.black,
+                            )),
+                      ],
                     ),
+                  ),
 
-                    ///Chat
-                    GestureDetector(
-                      onTap: () {
-                        if (state != 2) {
-                          BottomNotifier.bottomPageController!.jumpToPage(2);
-                          BottomNotifier.bottomNavigationNotifier.value = 2;
-                        }
-                      },
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SvgPicture.asset(
-                            "assets/images/calendar.svg",
-                            color: state == 2 ? Colors.blue : Colors.black,
-                          ),
-                          Text("Calender",
-                              style: TextStyles.selectedAndUnseletedStyle(
-                                context,
-                                color: state == 2 ? Colors.blue : Colors.black,
-                              )),
-                        ],
-                      ),
+                  ///Chat
+                  GestureDetector(
+                    onTap: () {
+                      if (state != 2) {
+                        BottomNotifier.bottomPageController!.jumpToPage(2);
+                        BottomNotifier.bottomNavigationNotifier.value = 2;
+                      }
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SvgPicture.asset(
+                          "assets/images/calendar.svg",
+                          color: state == 2 ? Colors.blue : Colors.black,
+                        ),
+                        Text("Calender",
+                            style: TextStyles.selectedAndUnseletedStyle(
+                              context,
+                              color: state == 2 ? Colors.blue : Colors.black,
+                            )),
+                      ],
                     ),
+                  ),
 
-                    ///Profile
-                    GestureDetector(
-                      onTap: () {
-                        if (state != 3) {
-                          BottomNotifier.bottomPageController!.jumpToPage(3);
-                          BottomNotifier.bottomNavigationNotifier.value = 3;
-                        }
-                      },
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SvgPicture.asset(
-                            "assets/images/message.svg",
-                            color: state == 3 ? Colors.blue : Colors.black,
-                          ),
-                          Text("Messages",
-                              style: TextStyles.selectedAndUnseletedStyle(
-                                context,
-                                color: state == 3 ? Colors.blue : Colors.black,
-                              )),
-                        ],
-                      ),
+                  ///Profile
+                  GestureDetector(
+                    onTap: () {
+                      if (state != 3) {
+                        BottomNotifier.bottomPageController!.jumpToPage(3);
+                        BottomNotifier.bottomNavigationNotifier.value = 3;
+                      }
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SvgPicture.asset(
+                          "assets/images/message.svg",
+                          color: state == 3 ? Colors.blue : Colors.black,
+                        ),
+                        Text("Messages",
+                            style: TextStyles.selectedAndUnseletedStyle(
+                              context,
+                              color: state == 3 ? Colors.blue : Colors.black,
+                            )),
+                      ],
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        if (state != 4) {
-                          BottomNotifier.bottomPageController!.jumpToPage(4);
-                          BottomNotifier.bottomNavigationNotifier.value = 4;
-                        }
-                      },
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SvgPicture.asset(
-                            "assets/images/task.svg",
-                            color: state == 4 ? Colors.blue : Colors.black,
-                          ),
-                          Text("Tasks",
-                              style: TextStyles.selectedAndUnseletedStyle(
-                                context,
-                                color: state == 4 ? Colors.blue : Colors.black,
-                              )),
-                        ],
-                      ),
-                    )
-                  ],
-                );
-              },
-              valueListenable: BottomNotifier.bottomNavigationNotifier,
-            ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      if (state != 4) {
+                        BottomNotifier.bottomPageController!.jumpToPage(4);
+                        BottomNotifier.bottomNavigationNotifier.value = 4;
+                      }
+                    },
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SvgPicture.asset(
+                          "assets/images/task.svg",
+                          color: state == 4 ? Colors.blue : Colors.black,
+                        ),
+                        Text("Tasks",
+                            style: TextStyles.selectedAndUnseletedStyle(
+                              context,
+                              color: state == 4 ? Colors.blue : Colors.black,
+                            )),
+                      ],
+                    ),
+                  )
+                ],
+              );
+            },
+            valueListenable: BottomNotifier.bottomNavigationNotifier,
           ),
         ));
   }

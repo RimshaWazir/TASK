@@ -1,5 +1,6 @@
 import 'package:dummy/Application/Services/Auth/auth_services.dart';
-import 'package:dummy/Data/DataSource/Repository/Auth/login_repo.dart';
+import 'package:dummy/Application/Services/Navigation/navigation.dart';
+import 'package:dummy/Data/DataSource/Repository/Auth/auth_repo.dart';
 import 'package:dummy/Presentation/Widgets/Auth/login.dart';
 import 'package:dummy/Presentation/Widgets/Auth/login_cubit.dart';
 
@@ -9,6 +10,7 @@ import 'package:dummy/Screens/category_screen.dart';
 import 'package:dummy/dynamic_links.dart';
 
 import 'package:dummy/firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -60,9 +62,46 @@ class _MyAppState extends State<MyApp> {
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
             ),
-            home: const LoginScreen(),
+            home: const SplashScreen(),
             debugShowCheckedModeBanner: false,
           );
         });
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    checkAuthState();
+  }
+
+  Future<void> checkAuthState() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (user != null) {
+      Navigate.toReplace(context, const BottomNavigationScreen());
+    } else {
+      Navigate.toReplace(context, const LoginScreen());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
   }
 }
