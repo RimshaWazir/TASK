@@ -33,7 +33,8 @@ class AuthService {
           'displayName': user.displayName ?? '',
           'photoURL': user.photoURL,
         }, SetOptions(merge: true));
-        log('user$user');
+        log('firebase user ${user.uid}');
+
         return user;
       } on FirebaseAuthException catch (e) {
         if (e.code == 'account-exists-with-different-credential') {

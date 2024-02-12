@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dummy/Application/Services/Navigation/navigation.dart';
-import 'package:dummy/Data/DataSource/Repository/Auth/auth_repo.dart';
 import 'package:dummy/Data/DataSource/Resources/sized_box.dart';
 import 'package:dummy/Data/DataSource/Resources/text_styles.dart';
 
@@ -198,66 +197,75 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget buildUserListItem(DocumentSnapshot document) {
-    Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-    if (auth.currentUser!.email != data['email']) {
-      return ListTile(
-        onTap: () {
-          Navigate.to(context,
-              MessagesScreen(name: data["displayName"], uuid: data["uuid"]));
-        },
-        contentPadding: const EdgeInsets.all(0),
-        leading: Container(
-          decoration: const BoxDecoration(shape: BoxShape.circle),
-          child: ClipOval(
-            child: Image.network(
-              data['photoURL'],
-              height: 50,
-              width: 50,
-            ),
-          ),
-        ),
-        title: Text(
-          data['displayName'],
-          style: TextStyles.urbanist(context, fontSize: 18),
-        ),
-        subtitle: Text(
-          'Message preview ',
-          style: TextStyles.urbanistMed(
-            context,
-            color: const Color(0xff272727),
-          ),
-        ),
-        trailing: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              height: 25,
-              width: 25,
-              decoration: const BoxDecoration(
-                color: Colors.blue,
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Text(
-                  "3",
-                  style: TextStyles.urbanist(context,
-                      color: Colors.white,
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.w400),
+    Map<String, dynamic> userData = document.data() as Map<String, dynamic>;
+
+    // Check if the current user is not the same as the user in the list
+    if (auth.currentUser!.email != userData['email']) {
+      // Access the last message data from the Firestore collection
+      FirebaseFirestore.instance
+          .collection('messages')
+          .doc('your_document_id')
+          .collection('messages')
+          .orderBy('timestamp', descending: true)
+          .limit(1)
+          .get()
+          .then((QuerySnapshot querySnapshot) {
+        if (querySnapshot.docs.isNotEmpty) {
+          DocumentSnapshot lastMessage = querySnapshot.docs.first;
+
+          Map<String, dynamic> lastMessageData =
+              lastMessage.data() as Map<String, dynamic>;
+
+          // Create a ListTile widget to display user information and last message
+          return Expanded(
+              child: ListTile(
+            onTap: () {
+              Navigate.to(
+                context,
+                MessagesScreen(
+                  name: userData["displayName"],
+                  uuid: userData["uuid"],
+                ),
+              );
+            },
+            contentPadding: const EdgeInsets.all(0),
+            leading: Container(
+              decoration: const BoxDecoration(shape: BoxShape.circle),
+              child: ClipOval(
+                child: Image.network(
+                  userData['photoURL'],
+                  height: 50,
+                  width: 50,
                 ),
               ),
             ),
-            Text(
-              '10:00',
+            title: Text(
+              userData['displayName'],
+              style: TextStyles.urbanist(context, fontSize: 18),
+            ),
+            subtitle: Text(
+              lastMessageData['message'], // Display last message
               style: TextStyles.urbanistMed(
                 context,
+                color: const Color(0xff272727),
               ),
             ),
-          ],
-        ),
-      );
-    } else {
-      return Container();
+            trailing: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Optionally, you can display message timestamp here
+                Text(
+                  lastMessageData['timestamp'],
+                  style: TextStyles.urbanistMed(context),
+                ),
+              ],
+            ),
+          ));
+        } else {
+          return const Center(child: Text("no data "));
+        }
+      });
     }
+    return const Center(child: Text("no data found  "));
   }
 }
