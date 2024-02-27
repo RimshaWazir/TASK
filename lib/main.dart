@@ -63,7 +63,9 @@ class _MyAppState extends State<MyApp> {
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
             ),
-            home: const SplashScreen(),
+            home: const LoginScreen(
+
+            ),
             debugShowCheckedModeBanner: false,
           );
         });
@@ -85,17 +87,19 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> checkAuthState() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User? user = auth.currentUser;
 
-    await Future.delayed(const Duration(seconds: 2));
-    log(user.toString());
-
-    if (user != null) {
-      Navigate.toReplace(context, const BottomNavigationScreen());
-    } else {
-      Navigate.toReplace(context, const LoginScreen());
-    }
+    Navigate.toReplace(context, const LoginScreen());
+    // FirebaseAuth auth = FirebaseAuth.instance;
+    // User? user = auth.currentUser;
+    //
+    // await Future.delayed(const Duration(seconds: 2));
+    // log(user.toString());
+    //
+    // if (user != null) {
+    //   Navigate.toReplace(context, const BottomNavigationScreen());
+    // } else {
+    //   Navigate.toReplace(context, const LoginScreen());
+    // }
   }
 
   @override
@@ -111,10 +115,10 @@ class _SplashScreenState extends State<SplashScreen> {
 _initializeFirebase() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  var result = await FlutterNotificationChannel.registerNotificationChannel(
-      description: 'For Showing Message Notification',
-      id: 'chats',
-      importance: NotificationImportance.IMPORTANCE_HIGH,
-      name: 'Chats');
-  log('\nNotification Channel Result: $result');
+  // var result = await FlutterNotificationChannel.registerNotificationChannel(
+  //     description: 'For Showing Message Notification',
+  //     id: 'chats',
+  //     importance: NotificationImportance.IMPORTANCE_HIGH,
+  //     name: 'Chats');
+  // log('\nNotification Channel Result: $result');
 }
