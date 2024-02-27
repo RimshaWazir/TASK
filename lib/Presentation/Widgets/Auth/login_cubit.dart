@@ -1,6 +1,9 @@
 import 'package:dummy/Data/DataSource/Repository/Auth/auth_repo.dart';
+
 import 'package:dummy/Presentation/Widgets/Auth/login.state.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginCubit extends Cubit<LoginAuthState> {
@@ -8,11 +11,11 @@ class LoginCubit extends Cubit<LoginAuthState> {
 
   LoginCubit(this._authRepository) : super(AuthInitial());
 
-  Future<void> signInWithGoogle() async {
+  Future<void> signInWithGoogle(BuildContext context) async {
     emit(AuthLoading());
 
     try {
-      final user = await _authRepository.signInWithGoogle();
+      final user = await _authRepository.signInWithGoogle(context);
 
       if (user != null) {
         emit(AuthSuccess(user));

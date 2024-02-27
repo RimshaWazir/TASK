@@ -6,7 +6,6 @@ import 'package:dummy/Data/DataSource/Resources/text_styles.dart';
 import 'package:dummy/Presentation/Widgets/Auth/login.state.dart';
 import 'package:dummy/Presentation/Widgets/Auth/login_cubit.dart';
 import 'package:dummy/Presentation/Widgets/Auth/phone.dart';
-import 'package:dummy/Presentation/Widgets/Dashboard/BottomNavigation/bottom_navigation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,7 +66,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (state is AuthLoading) {
                       return const CircularProgressIndicator();
                     }
-
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -81,9 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   () {
                                 context
                                     .read<LoginCubit>()
-                                    .signInWithGoogle()
-                                    .then((value) => Navigate.toReplace(context,
-                                        const BottomNavigationScreen()));
+                                    .signInWithGoogle(context);
                               });
                             },
                             style: ElevatedButton.styleFrom(

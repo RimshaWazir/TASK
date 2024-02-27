@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dummy/Application/Services/Auth/auth_services.dart';
 import 'package:dummy/Application/Services/Navigation/navigation.dart';
 import 'package:dummy/Data/DataSource/Repository/Auth/auth_repo.dart';
@@ -5,25 +7,24 @@ import 'package:dummy/Presentation/Widgets/Auth/login.dart';
 import 'package:dummy/Presentation/Widgets/Auth/login_cubit.dart';
 
 import 'package:dummy/Presentation/Widgets/Dashboard/BottomNavigation/bottom_navigation.dart';
-import 'package:dummy/Screens/category_screen.dart';
-
-import 'package:dummy/dynamic_links.dart';
 
 import 'package:dummy/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_notification_channel/flutter_notification_channel.dart';
+import 'package:flutter_notification_channel/notification_importance.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  _initializeFirebase();
   runApp(MultiBlocProvider(providers: [
     BlocProvider<LoginCubit>(
-      create: (BuildContext context) =>
-          LoginCubit(AuthRepository(AuthService())),
+      create: (BuildContext context) => LoginCubit(AuthRepository(APIs())),
     ),
   ], child: const MyApp()));
 }
@@ -54,9 +55,9 @@ class _MyAppState extends State<MyApp> {
           return MaterialApp(
             title: 'Message App',
             routes: {
-              "/login": (context) => const LoginScreen(),
               "/bottom_navigation": (context) => const BottomNavigationScreen(),
-              "/category_screen": (context) => const CategoryListView(),
+              "/dashboard": (context) => const BottomNavigationScreen(),
+              "/login": (context) => const BottomNavigationScreen(),
             },
             theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -88,6 +89,7 @@ class _SplashScreenState extends State<SplashScreen> {
     User? user = auth.currentUser;
 
     await Future.delayed(const Duration(seconds: 2));
+    log(user.toString());
 
     if (user != null) {
       Navigate.toReplace(context, const BottomNavigationScreen());
@@ -100,8 +102,19 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: CircularProgressIndicator(),
+        child: Text("Splash Screen"),
       ),
     );
   }
+}
+
+_initializeFirebase() async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  var result = await FlutterNotificationChannel.registerNotificationChannel(
+      description: 'For Showing Message Notification',
+      id: 'chats',
+      importance: NotificationImportance.IMPORTANCE_HIGH,
+      name: 'Chats');
+  log('\nNotification Channel Result: $result');
 }
