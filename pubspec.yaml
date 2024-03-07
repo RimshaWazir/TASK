@@ -55,9 +55,9 @@ dependencies:
   firebase_messaging: ^14.7.15
   emoji_picker_flutter: ^2.0.0
   image_picker: ^1.0.7
-  http: ^1.2.0
+  http: 
   flutter_notification_channel: ^2.0.0
- 
+  gallery_saver:
   
 
 dev_dependencies:

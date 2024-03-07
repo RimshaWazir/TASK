@@ -8,10 +8,11 @@ class TextStyles {
       FontWeight? fontWeight,
       double? letterSpacing}) {
     return TextStyle(
-      fontSize: (fontSize ?? 16.0.sp),
+      fontSize: ScreenUtil().setSp(fontSize ?? 16.0),
       letterSpacing: letterSpacing ?? 0,
       color: color ?? Colors.black,
       fontFamily: "Urbanist",
+      
       fontWeight: fontWeight ?? FontWeight.w700,
     );
   }
@@ -22,7 +23,7 @@ class TextStyles {
       FontWeight? fontWeight,
       double? letterSpacing}) {
     return TextStyle(
-      fontSize: (fontSize ?? 14.0.sp),
+      fontSize: ScreenUtil().setSp(fontSize ?? 14.0),
       letterSpacing: letterSpacing ?? 0,
       color: color ?? Colors.black,
       fontFamily: "Urbanist",
@@ -36,7 +37,7 @@ class TextStyles {
       FontWeight? fontWeight,
       double? letterSpacing}) {
     return TextStyle(
-      fontSize: (fontSize ?? 20.0.sp),
+      fontSize: ScreenUtil().setSp(fontSize ?? 20.0),
       letterSpacing: letterSpacing ?? 0,
       color: color ?? Colors.black,
       fontFamily: "Urbanist",
@@ -50,7 +51,7 @@ class TextStyles {
       FontWeight? fontWeight,
       double? letterSpacing}) {
     return TextStyle(
-      fontSize: (fontSize ?? 10.0.sp),
+      fontSize: ScreenUtil().setSp(fontSize ?? 10.0),
       letterSpacing: letterSpacing ?? 0,
       color: color ?? Colors.blue,
       fontFamily: "Urbanist",
