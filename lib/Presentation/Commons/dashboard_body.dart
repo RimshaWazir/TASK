@@ -1,14 +1,4 @@
-import 'package:dummy/Application/Services/ApiServices/Apis.dart';
-import 'package:dummy/Data/DataSource/Resources/gap.dart';
-import 'package:dummy/Data/DataSource/Resources/strings.dart';
-import 'package:dummy/Data/DataSource/Resources/text_styles.dart';
-import 'package:dummy/Presentation/Commons/avatar_userlist.dart';
-import 'package:dummy/Presentation/Commons/chat_card.dart';
-import 'package:dummy/Presentation/Commons/home_appbar.dart';
-import 'package:dummy/Presentation/Widgets/Dashboard/Controller/dashboard_cubit.dart';
-import 'package:dummy/Presentation/Widgets/Dashboard/States/dashboard_state.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../Data/DataSource/Resources/imports.dart';
 
 class DashboardBody extends StatelessWidget {
   DashboardCubitLoaded state;
@@ -27,7 +17,7 @@ class DashboardBody extends StatelessWidget {
       child: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
-            const HomeAppBar(),
+            HomeAppBar(),
           ];
         },
         body: Column(

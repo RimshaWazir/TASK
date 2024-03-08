@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import '../../../../../Data/DataSource/Resources/imports.dart';
 
 abstract class LoginAuthState {}
 

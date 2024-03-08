@@ -1,10 +1,5 @@
 import 'dart:developer';
-import 'package:dummy/Presentation/Commons/dashboard_body.dart';
-import 'package:dummy/Presentation/Widgets/Dashboard/Controller/dashboard_cubit.dart';
-import 'package:dummy/Presentation/Widgets/Dashboard/States/dashboard_state.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../Data/DataSource/Resources/imports.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});

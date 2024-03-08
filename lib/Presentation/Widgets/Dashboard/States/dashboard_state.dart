@@ -1,4 +1,4 @@
-import 'package:dummy/Domain/Model/chat_user_model.dart';
+import '../../../../Data/DataSource/Resources/imports.dart';
 
 abstract class DashboardCubitState {}
 

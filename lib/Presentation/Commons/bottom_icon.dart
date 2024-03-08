@@ -1,6 +1,4 @@
-import 'package:dummy/Data/DataSource/Resources/text_styles.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import '../../Data/DataSource/Resources/imports.dart';
 
 class BottomIcon extends StatelessWidget {
   Function() ontap;

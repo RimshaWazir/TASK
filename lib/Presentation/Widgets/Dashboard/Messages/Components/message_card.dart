@@ -1,11 +1,5 @@
 import 'dart:developer';
-
-import 'package:dummy/Application/Services/ApiServices/Apis.dart';
-import 'package:dummy/Data/DataSource/Resources/date_utils.dart';
-import 'package:dummy/Domain/Model/message_model.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:gallery_saver/gallery_saver.dart';
+import '../../../../../Data/DataSource/Resources/imports.dart';
 
 class MessageCard extends StatefulWidget {
   const MessageCard({super.key, required this.message});
@@ -28,7 +22,7 @@ class _MessageCardState extends State<MessageCard> {
   }
 
   Widget _whiteMessage() {
-    if (widget.message.read.isEmpty) {
+    if (widget.message.read!.isEmpty) {
       APIs().updateMessageReadStatus(widget.message);
     }
 
@@ -56,7 +50,7 @@ class _MessageCardState extends State<MessageCard> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    widget.message.msg,
+                    widget.message.msg!,
                     style: const TextStyle(
                       fontSize: 15,
                       color: Colors.black87,
@@ -68,7 +62,7 @@ class _MessageCardState extends State<MessageCard> {
                     children: [
                       Text(
                         MyDateUtil.getFormattedTime(
-                            context: context, time: widget.message.sent),
+                            context: context, time: widget.message.sent!),
                         style: const TextStyle(
                             fontSize: 13, color: Colors.black54),
                       ),
@@ -82,7 +76,7 @@ class _MessageCardState extends State<MessageCard> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
-                      widget.message.msg,
+                      widget.message.msg!,
                       height: 150,
                       width: 350,
                       fit: BoxFit.cover,
@@ -90,7 +84,7 @@ class _MessageCardState extends State<MessageCard> {
                   ),
                   Text(
                     MyDateUtil.getFormattedTime(
-                        context: context, time: widget.message.sent),
+                        context: context, time: widget.message.sent!),
                     style: const TextStyle(fontSize: 13, color: Colors.black54),
                   ),
                 ],
@@ -129,7 +123,7 @@ class _MessageCardState extends State<MessageCard> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    widget.message.msg,
+                    widget.message.msg!,
                     style: const TextStyle(
                       fontSize: 15,
                       color: Colors.black87,
@@ -141,14 +135,14 @@ class _MessageCardState extends State<MessageCard> {
                     children: [
                       Text(
                         MyDateUtil.getFormattedTime(
-                            context: context, time: widget.message.sent),
+                            context: context, time: widget.message.sent!),
                         style: const TextStyle(
                             fontSize: 13, color: Colors.black54),
                       ),
                       const SizedBox(
                         width: 5,
                       ),
-                      widget.message.read.isNotEmpty
+                      widget.message.read!.isNotEmpty
                           ? const Icon(Icons.done_all_rounded,
                               color: Colors.red, size: 20)
                           : const Icon(Icons.done_all_rounded,
@@ -162,7 +156,7 @@ class _MessageCardState extends State<MessageCard> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
-                      widget.message.msg,
+                      widget.message.msg!,
                       height: 150,
                       width: 350,
                       fit: BoxFit.cover,
@@ -173,14 +167,14 @@ class _MessageCardState extends State<MessageCard> {
                     children: [
                       Text(
                         MyDateUtil.getFormattedTime(
-                            context: context, time: widget.message.sent),
+                            context: context, time: widget.message.sent!),
                         style: const TextStyle(
                             fontSize: 13, color: Colors.black54),
                       ),
                       const SizedBox(
                         width: 5,
                       ),
-                      widget.message.read.isNotEmpty
+                      widget.message.read!.isNotEmpty
                           ? const Icon(Icons.done_all_rounded,
                               color: Colors.red, size: 20)
                           : const Icon(Icons.done_all_rounded,
@@ -212,7 +206,7 @@ class _MessageCardState extends State<MessageCard> {
                       name: 'Copy Text',
                       onTap: () async {
                         await Clipboard.setData(
-                                ClipboardData(text: widget.message.msg))
+                                ClipboardData(text: widget.message.msg!))
                             .then((value) {
                           Navigator.pop(context);
 
@@ -228,7 +222,7 @@ class _MessageCardState extends State<MessageCard> {
                       onTap: () async {
                         try {
                           log('Image Url: ${widget.message.msg}');
-                          await GallerySaver.saveImage(widget.message.msg,
+                          await GallerySaver.saveImage(widget.message.msg!,
                                   albumName: 'We Chat')
                               .then((success) {
                             //for hiding bottom sheet
@@ -273,7 +267,7 @@ class _MessageCardState extends State<MessageCard> {
 
   //dialog for updating message content
   void _showMessageUpdateDialog() {
-    String updatedMsg = widget.message.msg;
+    String updatedMsg = widget.message.msg!;
 
     showDialog(
         context: context,

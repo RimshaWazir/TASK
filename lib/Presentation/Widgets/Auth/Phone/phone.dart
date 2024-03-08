@@ -1,18 +1,6 @@
 import 'dart:developer';
-import 'package:dummy/Data/DataSource/Resources/assets.dart';
-import 'package:dummy/Data/DataSource/Resources/gap.dart';
-import 'package:dummy/Data/DataSource/Resources/strings.dart';
-import 'package:dummy/Data/DataSource/Resources/text_styles.dart';
-import 'package:dummy/Presentation/Widgets/Auth/Login/State/login.state.dart';
-import 'package:dummy/Presentation/Widgets/Auth/Login/Controllers/login_cubit.dart';
-import 'package:dummy/Presentation/Widgets/Auth/Phone/Controllers/phone_cubit.dart';
-import 'package:dummy/Presentation/Widgets/Auth/Phone/State/phone_state.dart';
-import 'package:dummy/Presentation/Widgets/Dashboard/BottomNavigation/bottom_navigation.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+
+import '../../../../Data/DataSource/Resources/imports.dart';
 
 class PhoneScreen extends StatefulWidget {
   const PhoneScreen({super.key});

@@ -1,10 +1,5 @@
 import 'dart:developer';
-
-import 'package:dummy/Presentation/Widgets/Auth/Login/login.dart';
-import 'package:dummy/Presentation/Widgets/Dashboard/BottomNavigation/bottom_navigation.dart';
-import 'package:dummy/Application/Services/Navigation/navigation.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import '../../../Data/DataSource/Resources/imports.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

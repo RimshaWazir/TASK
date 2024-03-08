@@ -1,15 +1,6 @@
 import 'dart:developer';
 
-import 'package:dummy/Application/Services/ApiServices/Apis.dart';
-import 'package:dummy/Data/DataSource/Resources/assets.dart';
-import 'package:dummy/Data/DataSource/Resources/strings.dart';
-import 'package:dummy/Domain/Model/chat_user_model.dart';
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../States/dashboard_state.dart';
+import '../../../../Data/DataSource/Resources/imports.dart';
 
 class DashboardCubit extends Cubit<DashboardCubitState> {
   FirebaseAuth auth = FirebaseAuth.instance;

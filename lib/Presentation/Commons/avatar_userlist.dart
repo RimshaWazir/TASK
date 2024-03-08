@@ -1,7 +1,4 @@
-import 'package:dummy/Data/DataSource/Resources/gap.dart';
-import 'package:dummy/Data/DataSource/Resources/text_styles.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../Data/DataSource/Resources/imports.dart';
 
 class AvatarUserList extends StatelessWidget {
   const AvatarUserList({

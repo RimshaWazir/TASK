@@ -1,8 +1,4 @@
-import 'package:dummy/Data/DataSource/Resources/assets.dart';
-import 'package:dummy/Data/DataSource/Resources/strings.dart';
-import 'package:dummy/Presentation/Commons/bottom_icon.dart';
-import 'package:dummy/Presentation/Widgets/Dashboard/BottomNavigation/Controller/BottomNavigationNotifier/bottom_navigation_notifier.dart';
-import 'package:flutter/material.dart';
+import '../../Data/DataSource/Resources/imports.dart';
 
 class BottomAppbar extends StatelessWidget {
   const BottomAppbar({

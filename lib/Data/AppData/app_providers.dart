@@ -1,11 +1,10 @@
-import 'package:dummy/Application/Services/ApiServices/Apis.dart';
-import 'package:dummy/Data/DataSource/Repository/Auth/auth_repo.dart';
-import 'package:dummy/Presentation/Widgets/Auth/Login/Controllers/login_cubit.dart';
-
-import 'package:flutter_bloc/flutter_bloc.dart';
+import '../DataSource/Resources/imports.dart';
 
 List<BlocProvider> appProviders = [
-  BlocProvider(
-    create: (context) => LoginCubit(AuthRepository(APIs())),
+  BlocProvider<LoginCubit>(
+    create: (BuildContext context) => LoginCubit(AuthRepository(APIs())),
+  ),
+  BlocProvider<DashboardCubit>(
+    create: (BuildContext context) => DashboardCubit(auth),
   ),
 ];

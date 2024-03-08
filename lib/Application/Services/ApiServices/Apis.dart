@@ -291,7 +291,7 @@ class APIs {
   // for getting all messages of a specific conversation from firestore database
   Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(ChatUser user) {
     return firestore
-        .collection('chats/${getConversationID(user.id)}/messages/')
+        .collection('chats/${getConversationID(user.id!)}/messages/')
         .orderBy('sent', descending: true)
         .snapshots();
   }
@@ -303,7 +303,7 @@ class APIs {
 
     //message to send
     final Message message = Message(
-        toId: chatUser.id,
+        toId: chatUser.id!,
         msg: msg,
         read: '',
         type: type,
@@ -311,7 +311,7 @@ class APIs {
         sent: time);
 
     final ref = firestore
-        .collection('chats/${getConversationID(chatUser.id)}/messages/');
+        .collection('chats/${getConversationID(chatUser.id!)}/messages/');
     await ref.doc(time).set(message.toJson());
     await ref.doc(time).set(message.toJson()).then((value) =>
         sendPushNotification(chatUser, type == Type.text ? msg : 'image'));
@@ -320,7 +320,7 @@ class APIs {
   //update read status of message
   Future<void> updateMessageReadStatus(Message message) async {
     firestore
-        .collection('chats/${getConversationID(message.fromId)}/messages/')
+        .collection('chats/${getConversationID(message.fromId!)}/messages/')
         .doc(message.sent)
         .update({'read': DateTime.now().millisecondsSinceEpoch.toString()});
   }
@@ -328,7 +328,7 @@ class APIs {
   //get only last message of a specific chat
   Stream<QuerySnapshot<Map<String, dynamic>>> getLastMessage(ChatUser user) {
     return firestore
-        .collection('chats/${getConversationID(user.id)}/messages/')
+        .collection('chats/${getConversationID(user.id!)}/messages/')
         .orderBy('sent', descending: true)
         .limit(1)
         .snapshots();
@@ -341,7 +341,7 @@ class APIs {
 
     //storage file ref with path
     final ref = storage.ref().child(
-        'images/${getConversationID(chatUser.id)}/${DateTime.now().millisecondsSinceEpoch}.$ext');
+        'images/${getConversationID(chatUser.id!)}/${DateTime.now().millisecondsSinceEpoch}.$ext');
 
     //uploading image
     await ref
@@ -358,19 +358,19 @@ class APIs {
   //delete message
   Future<void> deleteMessage(Message message) async {
     await firestore
-        .collection('chats/${getConversationID(message.toId)}/messages/')
+        .collection('chats/${getConversationID(message.toId!)}/messages/')
         .doc(message.sent)
         .delete();
 
     if (message.type == Type.image) {
-      await storage.refFromURL(message.msg).delete();
+      await storage.refFromURL(message.msg!).delete();
     }
   }
 
   //update message
   Future<void> updateMessage(Message message, String updatedMsg) async {
     await firestore
-        .collection('chats/${getConversationID(message.toId)}/messages/')
+        .collection('chats/${getConversationID(message.toId!)}/messages/')
         .doc(message.sent)
         .update({'msg': updatedMsg});
   }

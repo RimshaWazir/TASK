@@ -1,14 +1,5 @@
 import 'dart:developer';
-
-import 'package:dummy/Application/Services/ApiServices/Apis.dart';
-import 'package:dummy/Application/Services/Navigation/navigation.dart';
-import 'package:dummy/Data/DataSource/Resources/date_utils.dart';
-import 'package:dummy/Data/DataSource/Resources/strings.dart';
-import 'package:dummy/Data/DataSource/Resources/text_styles.dart';
-import 'package:dummy/Domain/Model/chat_user_model.dart';
-import 'package:dummy/Domain/Model/message_model.dart';
-import 'package:dummy/Presentation/Widgets/Dashboard/Messages/messages.dart';
-import 'package:flutter/material.dart';
+import '../../Data/DataSource/Resources/imports.dart';
 
 class ChatCard extends StatelessWidget {
   Message? message;
@@ -21,7 +12,7 @@ class ChatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log(user.name);
+    log(user.name!);
     return StreamBuilder(
       stream: APIs().getLastMessage(user),
       builder: (context, snapshot) {
@@ -54,7 +45,7 @@ class ChatCard extends StatelessWidget {
             ),
           ),
           title: Text(
-            user.name,
+            user.name!,
             style: TextStyles.urbanist(context, fontSize: 18),
           ),
           subtitle: Row(
@@ -70,7 +61,7 @@ class ChatCard extends StatelessWidget {
                   message != null
                       ? message!.type == Type.image
                           ? ""
-                          : message!.msg
+                          : message!.msg!
                       : AppStrings.usingThisApp,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyles.urbanistMed(
@@ -83,7 +74,7 @@ class ChatCard extends StatelessWidget {
           ),
           trailing: message == null
               ? null
-              : message!.read.isEmpty && message!.fromId != APIs.user.uid
+              : message!.read!.isEmpty && message!.fromId != APIs.user.uid
                   ? Container(
                       width: 15,
                       height: 15,
@@ -93,7 +84,7 @@ class ChatCard extends StatelessWidget {
                     )
                   : Text(
                       MyDateUtil.getLastMessageTime(
-                          context: context, time: message!.sent),
+                          context: context, time: message!.sent!),
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 12,

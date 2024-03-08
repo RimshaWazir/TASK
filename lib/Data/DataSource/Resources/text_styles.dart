@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'imports.dart';
 
 class TextStyles {
   static TextStyle urbanist(BuildContext context,
@@ -12,7 +11,6 @@ class TextStyles {
       letterSpacing: letterSpacing ?? 0,
       color: color ?? Colors.black,
       fontFamily: "Urbanist",
-      
       fontWeight: fontWeight ?? FontWeight.w700,
     );
   }

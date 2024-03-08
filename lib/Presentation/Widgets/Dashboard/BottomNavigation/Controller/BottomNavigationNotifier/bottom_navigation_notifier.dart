@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import '../../../../../../Data/DataSource/Resources/imports.dart';
 
 class BottomNotifier {
   static ValueNotifier<int> bottomNavigationNotifier = ValueNotifier(0);

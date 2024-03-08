@@ -1,13 +1,4 @@
-import 'package:dummy/Application/Services/Navigation/navigation.dart';
-import 'package:dummy/Data/DataSource/Resources/assets.dart';
-import 'package:dummy/Data/DataSource/Resources/gap.dart';
-import 'package:dummy/Data/DataSource/Resources/text_styles.dart';
-import 'package:dummy/Presentation/Widgets/Auth/Login/Controllers/login_cubit.dart';
-import 'package:dummy/Presentation/Widgets/Auth/Phone/phone.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+import '../../Data/DataSource/Resources/imports.dart';
 
 class ButtonColumn extends StatelessWidget {
   const ButtonColumn({

@@ -1,10 +1,4 @@
-import 'package:dummy/Data/DataSource/Repository/Auth/auth_repo.dart';
-
-import 'package:dummy/Presentation/Widgets/Auth/Login/State/login.state.dart';
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../Data/DataSource/Resources/imports.dart';
 
 class LoginCubit extends Cubit<LoginAuthState> {
   final AuthRepository _authRepository;

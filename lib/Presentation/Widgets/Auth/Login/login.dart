@@ -1,12 +1,6 @@
 import 'dart:developer';
-import 'package:dummy/Data/DataSource/Resources/gap.dart';
-import 'package:dummy/Data/DataSource/Resources/strings.dart';
-import 'package:dummy/Data/DataSource/Resources/text_styles.dart';
-import 'package:dummy/Presentation/Commons/button_column.dart';
-import 'package:dummy/Presentation/Widgets/Auth/Login/State/login.state.dart';
-import 'package:dummy/Presentation/Widgets/Auth/Login/Controllers/login_cubit.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../Data/DataSource/Resources/imports.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});

@@ -1,13 +1,5 @@
 import 'dart:developer';
-import 'dart:io';
-import 'package:dummy/Application/Services/ApiServices/Apis.dart';
-import 'package:dummy/Data/DataSource/Resources/date_utils.dart';
-import 'package:dummy/Domain/Model/chat_user_model.dart';
-import 'package:dummy/Domain/Model/message_model.dart';
-import 'package:dummy/Presentation/Widgets/Dashboard/Messages/Components/message_card.dart';
-import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import '../../../../Data/DataSource/Resources/imports.dart';
 
 class ChatScreen extends StatefulWidget {
   final ChatUser user;
@@ -56,7 +48,8 @@ class _ChatScreenState extends State<ChatScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         //user name
-                        Text(list.isNotEmpty ? list[0].name : widget.user.name,
+                        Text(
+                            list.isNotEmpty ? list[0].name! : widget.user.name!,
                             style: const TextStyle(
                                 fontSize: 16,
                                 color: Colors.black87,
@@ -67,14 +60,14 @@ class _ChatScreenState extends State<ChatScreen> {
                         //last seen time of user
                         Text(
                             list.isNotEmpty
-                                ? list[0].isOnline
+                                ? list[0].isOnline!
                                     ? 'Online'
                                     : MyDateUtil.getLastActiveTime(
                                         context: context,
-                                        lastActive: list[0].lastActive)
+                                        lastActive: list[0].lastActive!)
                                 : MyDateUtil.getLastActiveTime(
                                     context: context,
-                                    lastActive: widget.user.lastActive),
+                                    lastActive: widget.user.lastActive!),
                             style: const TextStyle(
                                 fontSize: 13, color: Colors.black54)),
                       ],
@@ -181,7 +174,7 @@ class _ChatScreenState extends State<ChatScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               //user name
-              Text(list.isNotEmpty ? list[0].name : widget.user.name,
+              Text(list.isNotEmpty ? list[0].name! : widget.user.name!,
                   style: const TextStyle(
                       fontSize: 16,
                       color: Colors.black87,
@@ -193,12 +186,13 @@ class _ChatScreenState extends State<ChatScreen> {
               //last seen time of user
               Text(
                   list.isNotEmpty
-                      ? list[0].isOnline
+                      ? list[0].isOnline!
                           ? 'Online'
                           : MyDateUtil.getLastActiveTime(
-                              context: context, lastActive: list[0].lastActive)
+                              context: context, lastActive: list[0].lastActive!)
                       : MyDateUtil.getLastActiveTime(
-                          context: context, lastActive: widget.user.lastActive),
+                          context: context,
+                          lastActive: widget.user.lastActive!),
                   style: const TextStyle(fontSize: 13, color: Colors.black54)),
             ],
           );

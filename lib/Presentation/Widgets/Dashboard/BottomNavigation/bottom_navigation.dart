@@ -1,8 +1,4 @@
-import 'package:dummy/Presentation/Commons/bottom_appbar.dart';
-import 'package:dummy/Presentation/Widgets/Dashboard/dashboard.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'Controller/BottomNavigationNotifier/bottom_navigation_notifier.dart';
+import '../../../../Data/DataSource/Resources/imports.dart';
 
 class BottomNavigationScreen extends StatefulWidget {
   final int? initialPage;
