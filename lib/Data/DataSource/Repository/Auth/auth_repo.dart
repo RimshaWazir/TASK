@@ -6,14 +6,7 @@ class AuthRepository {
   AuthRepository(this._authService);
   signInWithGoogle(BuildContext context) {
     const CircularProgressIndicator();
-    APIs().signInWithGoogle().then((user) async {
-      Navigate.pop(context);
-      if (user != null) {
-        Navigate.toReplace(context, const BottomNavigationScreen());
-      } else {
-        log("error");
-      }
-    });
+    APIs().signInWithGoogle();
   }
 
   Future<void> saveUserDataInPreferences(String key, String value) async {
@@ -36,5 +29,19 @@ class AuthRepository {
       onVerificationCompleted: onVerificationCompleted,
       onCodeSent: onCodeSent,
     );
+  }
+
+  final FirestoreService _firestoreService = FirestoreService();
+
+  Future<void> signUpUser(
+      {required ChatUser user, required String password}) async {
+    try {
+      UserCredential credential =
+          await _authService.signUpWithEmailAndPassword(user.email!, password);
+      user.id = credential.user!.uid;
+      await _firestoreService.signUpUser(user: user, uid: user.id!);
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
   }
 }

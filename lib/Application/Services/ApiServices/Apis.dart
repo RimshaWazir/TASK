@@ -1,17 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dummy/Domain/Model/message_model.dart';
 import 'package:dummy/Domain/Model/chat_user_model.dart';
-import 'package:dummy/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_notification_channel/flutter_notification_channel.dart';
-import 'package:flutter_notification_channel/notification_importance.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 
@@ -373,5 +368,29 @@ class APIs {
         .collection('chats/${getConversationID(message.toId!)}/messages/')
         .doc(message.sent)
         .update({'msg': updatedMsg});
+  }
+
+  Future<UserCredential> signUpWithEmailAndPassword(
+      String email, String password) async {
+    try {
+      return await auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+  }
+}
+
+class FirestoreService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<void> signUpUser({required ChatUser user, required String uid}) async {
+    try {
+      await _firestore.collection('users').doc(uid).set(user.toJson());
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
   }
 }

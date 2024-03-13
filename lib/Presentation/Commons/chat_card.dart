@@ -37,11 +37,14 @@ class ChatCard extends StatelessWidget {
           leading: Container(
             decoration: const BoxDecoration(shape: BoxShape.circle),
             child: ClipOval(
-              child: Image.network(
-                user.image.toString(),
-                height: 50,
-                width: 50,
-              ),
+              child: user.image != null
+                  ? Image.network(
+                      user.image!,
+                      height: 50,
+                      width: 50,
+                    )
+                  : const Icon(Icons.account_circle,
+                      size: 50, color: Colors.grey),
             ),
           ),
           title: Text(

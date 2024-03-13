@@ -13,6 +13,7 @@ class LoginCubit extends Cubit<LoginAuthState> {
 
       if (user != null) {
         emit(AuthSuccess(user));
+        Navigate.toReplace(context, const BottomNavigationScreen());
       } else {
         emit(AuthError("Sign-in with Google failed"));
       }

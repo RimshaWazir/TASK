@@ -14,6 +14,9 @@ class _MessageCardState extends State<MessageCard> {
   @override
   Widget build(BuildContext context) {
     bool isMe = APIs.user.uid == widget.message.fromId;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final messageWidth = MediaQuery.of(context).size.width / 1.5;
+
     return InkWell(
         onLongPress: () {
           _showBottomSheet(isMe);
@@ -26,7 +29,7 @@ class _MessageCardState extends State<MessageCard> {
       APIs().updateMessageReadStatus(widget.message);
     }
 
-    return Expanded(
+    return IntrinsicWidth(
       child: Container(
         alignment: Alignment.centerLeft,
         margin: EdgeInsets.only(
@@ -45,30 +48,32 @@ class _MessageCardState extends State<MessageCard> {
           ),
         ),
         child: widget.message.type == Type.text
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.message.msg!,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      color: Colors.black87,
-                    ),
-                    maxLines: 5,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        MyDateUtil.getFormattedTime(
-                            context: context, time: widget.message.sent!),
-                        style: const TextStyle(
-                            fontSize: 13, color: Colors.black54),
+            ? IntrinsicWidth(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.message.msg!,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.black87,
                       ),
-                    ],
-                  ),
-                ],
+                      maxLines: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          MyDateUtil.getFormattedTime(
+                              context: context, time: widget.message.sent!),
+                          style: const TextStyle(
+                              fontSize: 13, color: Colors.black54),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               )
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -95,7 +100,7 @@ class _MessageCardState extends State<MessageCard> {
 
   // our or user message
   Widget _blueMessage() {
-    return Expanded(
+    return IntrinsicWidth(
       child: Container(
         alignment: Alignment.centerRight,
         margin: EdgeInsets.only(
@@ -119,8 +124,8 @@ class _MessageCardState extends State<MessageCard> {
             ?
             //show text
             Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
                     widget.message.msg!,

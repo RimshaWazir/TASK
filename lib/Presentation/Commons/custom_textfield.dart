@@ -104,8 +104,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
             height: null,
             decoration: BoxDecoration(
               boxShadow: widget.isShadowRequired! ? [AppShadow.normal()] : [],
-              //border:Border.all(color: AppColors.lightGreyColor)
-              // borderRadius: BorderRadius.circular(),
             ),
             child: TextFormField(
               onTap: widget.onTap,

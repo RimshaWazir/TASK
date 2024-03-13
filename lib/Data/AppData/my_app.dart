@@ -1,3 +1,5 @@
+import 'package:dummy/Presentation/Widgets/Auth/SignUp/signup.dart';
+
 import '../DataSource/Resources/imports.dart';
 
 class MyApp extends StatelessWidget {
@@ -13,9 +15,10 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: AppStrings.messageApp,
             theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-              useMaterial3: true,
-            ),
+                primaryColor: Colors.blue,
+                bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+                    backgroundColor: Colors.transparent,
+                    type: BottomNavigationBarType.shifting)),
             home: const SplashScreen(),
             debugShowCheckedModeBanner: false,
           );
