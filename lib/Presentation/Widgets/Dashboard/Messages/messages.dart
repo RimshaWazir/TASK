@@ -1,13 +1,9 @@
 import 'dart:developer';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dummy/Data/DataSource/Resources/notifiers.dart';
-import 'package:dummy/Presentation/Widgets/Auth/SignUp/Controller/sign_up_cubit.dart';
 import 'package:dummy/Presentation/Widgets/Dashboard/Messages/Controllers/message_cubit.dart';
 import 'package:dummy/Presentation/Widgets/Dashboard/Messages/States/chat_state.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-
 import '../../../../Data/DataSource/Resources/imports.dart';
+import 'Controllers/notifiers.dart';
 
 class UserDataNotifier extends ValueNotifier<List<ChatUser>> {
   UserDataNotifier(super.value);
@@ -35,6 +31,18 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        if (Notifiers.scrollDownNotifier.value != true) {
+          Notifiers.scrollDownNotifier.value = true;
+        }
+      } else {
+        if (Notifiers.scrollDownNotifier.value != false) {
+          Notifiers.scrollDownNotifier.value = false;
+        }
+      }
+    });
     _userDataNotifier = UserDataNotifier([]);
     context.read<ChatCubit>().init();
   }
@@ -42,6 +50,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void dispose() {
     context.read<ChatCubit>().close();
+    Notifiers.scrollDownNotifier.value = false;
     super.dispose();
   }
 
@@ -186,24 +195,35 @@ class _ChatScreenState extends State<ChatScreen> {
                   );
                 }),
             floatingActionButton: Padding(
-              padding: const EdgeInsets.only(bottom: 50),
-              child: GestureDetector(
-                onTap: () {
-                  _scrollController.animateTo(
-                    0.0,
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeInOut,
-                  );
+              padding: const EdgeInsets.only(bottom: 65),
+              child: ValueListenableBuilder(
+                builder: (context, scrollData, ss) {
+                  return scrollData == true
+                      ? GestureDetector(
+                          onTap: () {
+                            _scrollController.animateTo(
+                                _scrollController.position.minScrollExtent,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.bounceInOut);
+                          },
+                          child: Card(
+                            elevation: 4,
+                            child: Container(
+                              height: 30,
+                              width: 30,
+                              decoration: const BoxDecoration(
+                                  shape: BoxShape.circle, color: Colors.white),
+                              child: const Center(
+                                  child: Icon(
+                                Icons.keyboard_double_arrow_down_outlined,
+                                color: Colors.black,
+                              )),
+                            ),
+                          ),
+                        )
+                      : const Stack();
                 },
-                child: Card(
-                  elevation: 3,
-                  child: Container(
-                      decoration: const BoxDecoration(
-                          color: Colors.white, shape: BoxShape.circle),
-                      height: 34,
-                      width: 34,
-                      child: const Icon(Icons.arrow_downward_rounded)),
-                ),
+                valueListenable: Notifiers.scrollDownNotifier,
               ),
             ),
           ),
@@ -215,10 +235,9 @@ class _ChatScreenState extends State<ChatScreen> {
   void _scrollToBottom() {
     if (!_scrollController.hasClients) {
       _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
+          _scrollController.position.maxScrollExtent + 400,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.bounceInOut);
     }
   }
 

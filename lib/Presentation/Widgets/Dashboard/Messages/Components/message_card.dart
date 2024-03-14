@@ -50,8 +50,8 @@ class _MessageCardState extends State<MessageCard> {
         child: widget.message.type == Type.text
             ? IntrinsicWidth(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       widget.message.msg!,
@@ -61,16 +61,11 @@ class _MessageCardState extends State<MessageCard> {
                       ),
                       maxLines: 5,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          MyDateUtil.getFormattedTime(
-                              context: context, time: widget.message.sent!),
-                          style: const TextStyle(
-                              fontSize: 13, color: Colors.black54),
-                        ),
-                      ],
+                    Text(
+                      MyDateUtil.getFormattedTime(
+                          context: context, time: widget.message.sent!),
+                      style:
+                          const TextStyle(fontSize: 13, color: Colors.black54),
                     ),
                   ],
                 ),
@@ -125,7 +120,7 @@ class _MessageCardState extends State<MessageCard> {
             //show text
             Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     widget.message.msg!,

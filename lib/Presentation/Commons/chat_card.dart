@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'package:cached_network_image/cached_network_image.dart';
+
 import '../../Data/DataSource/Resources/imports.dart';
 
 class ChatCard extends StatelessWidget {
@@ -36,16 +38,30 @@ class ChatCard extends StatelessWidget {
           contentPadding: const EdgeInsets.all(3),
           leading: Container(
             decoration: const BoxDecoration(shape: BoxShape.circle),
-            child: ClipOval(
-              child: user.image != null
-                  ? Image.network(
-                      user.image!,
-                      height: 50,
-                      width: 50,
-                    )
-                  : const Icon(Icons.account_circle,
-                      size: 50, color: Colors.grey),
-            ),
+            child: user.image != null
+                ? ClipOval(
+                    child: CachedNetworkImage(
+                      height: 50.h,
+                      width: 50.h,
+                      imageUrl: user.image!,
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ),
+                  )
+                : ClipOval(
+                    child: CachedNetworkImage(
+                      height: 50.h,
+                      width: 50.h,
+                      imageUrl:
+                          "https://unsplash.com/photos/woman-with-dslr-camera-e616t35Vbeg",
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ),
+                  ),
           ),
           title: Text(
             user.name!,

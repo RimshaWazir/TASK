@@ -15,7 +15,8 @@ Scroll is not handle it should show an bottom icon if I move upword(Noted)
 Follow simple authentication also(Noted)
 Architecture still not followed No initializer no proper following of architecture the flow of data is wrong(Noted) 
 Common widgets still some of them not  there e.g, Text ,TextForm Field etc. (Noted)
-In Folder Domain/model the model shall be optional not required it will be  helpfull in error handling.(Noted)
+In Folder Domain/model the model shall be optional not required it will be helpfull in error handling.(Noted)
 
-Chat also have issue regarding width of message container it should be dynamic (Not Cover)
+Chat also have issue regarding width of message container it should be dynamic (Noted)
 other issue is performance use value notifier instead of stream builder to effectively handle the stream (Noted)
+ 
