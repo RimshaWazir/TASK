@@ -9,7 +9,7 @@ class LoginCubit extends Cubit<LoginAuthState> {
     emit(AuthLoading());
 
     try {
-      final user = await _authRepository.signInWithGoogle(context);
+      final User? user = await _authRepository.signInWithGoogle(context);
 
       if (user != null) {
         emit(AuthSuccess(user));

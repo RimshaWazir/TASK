@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dummy/Data/DataSource/Resources/imports.dart';
 import 'package:dummy/Domain/Model/message_model.dart';
 import 'package:dummy/Domain/Model/chat_user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,43 +29,51 @@ class APIs {
       isOnline: false,
       lastActive: time,
       pushToken: '');
-  Future<User?> signInWithGoogle() async {
+  Future<User?> signInWithGoogle(BuildContext context) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    await auth.signOut();
-    User? user;
-    final GoogleSignIn googleSignIn = GoogleSignIn();
-    await googleSignIn.signOut();
-    final GoogleSignInAccount? googleSignInAccount =
-        await googleSignIn.signIn();
-    if (googleSignInAccount != null) {
-      final GoogleSignInAuthentication googleSignInAuthentication =
-          await googleSignInAccount.authentication;
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleSignInAuthentication.accessToken,
-        idToken: googleSignInAuthentication.idToken,
-      );
 
-      try {
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      await googleSignIn.signOut();
+      final GoogleSignInAccount? googleSignInAccount =
+          await googleSignIn.signIn();
+
+      if (googleSignInAccount != null) {
+        final GoogleSignInAuthentication googleSignInAuthentication =
+            await googleSignInAccount.authentication;
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleSignInAuthentication.accessToken,
+          idToken: googleSignInAuthentication.idToken,
+        );
+
         final UserCredential userCredential =
             await auth.signInWithCredential(credential);
-        user = userCredential.user;
+        final User? user = userCredential.user;
 
-        Map<String, dynamic> userData = me.toJson();
+        if (user != null) {
+          Map<String, dynamic> userData = me.toJson();
+          await firestore
+              .collection("users")
+              .doc(user.uid)
+              .set(userData, SetOptions(merge: true));
 
-        await firestore
-            .collection("users")
-            .doc(user!.uid)
-            .set(userData, SetOptions(merge: true));
+          // Navigate to the BottomNavigationScreen
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const BottomNavigationScreen(),
+            ),
+          );
 
-        log('users: $user');
-        return user;
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'account-exists-with-different-credential') {
-          log('Error');
-        } else if (e.code == 'invalid-credential') {
-          log('Invalid Cred error');
+          log('users: $user');
+          return user;
         }
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'account-exists-with-different-credential') {
+        log('Error');
+      } else if (e.code == 'invalid-credential') {
+        log('Invalid Cred error');
       }
     }
     return null;

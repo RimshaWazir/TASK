@@ -143,7 +143,6 @@ class _ChatScreenState extends State<ChatScreen> {
                                       controller: _scrollController,
                                       itemCount: _list.length,
                                       padding: const EdgeInsets.only(top: 1),
-                                      physics: const BouncingScrollPhysics(),
                                       itemBuilder: (context, index) {
                                         return MessageCard(
                                             message: _list[index]);

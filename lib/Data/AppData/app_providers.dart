@@ -15,5 +15,8 @@ List<BlocProvider> appProviders = [
   ),
   BlocProvider<ChatCubit>(
     create: (BuildContext context) => ChatCubit(ChatUser()),
+  ),
+  BlocProvider<PhoneCubit>(
+    create: (BuildContext context) => PhoneCubit(AuthRepository(APIs())),
   )
 ];

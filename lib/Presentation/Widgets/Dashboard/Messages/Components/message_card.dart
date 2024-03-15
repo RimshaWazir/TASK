@@ -1,27 +1,66 @@
 import 'dart:developer';
 import '../../../../../Data/DataSource/Resources/imports.dart';
 
-class MessageCard extends StatefulWidget {
+class MessageCard extends StatelessWidget {
   const MessageCard({super.key, required this.message});
 
   final Message message;
 
   @override
-  State<MessageCard> createState() => _MessageCardState();
+  Widget build(BuildContext context) {
+    return Hero(
+      tag: message.msg!,
+      child: _MessageCardStateful(message: message),
+    );
+  }
 }
 
-class _MessageCardState extends State<MessageCard> {
+class _MessageCardStateful extends StatefulWidget {
+  const _MessageCardStateful({super.key, required this.message});
+
+  final Message message;
+
+  @override
+  State<_MessageCardStateful> createState() => _MessageCardState();
+}
+
+class _MessageCardState extends State<_MessageCardStateful> {
+  void showFullScreenImage(BuildContext context, String imageUrl) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.black,
+            iconTheme: const IconThemeData(color: Colors.white),
+            elevation: 0,
+          ),
+          body: Center(
+            child: Image.network(
+              imageUrl,
+              fit: BoxFit.fitHeight,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isMe = APIs.user.uid == widget.message.fromId;
-    final screenWidth = MediaQuery.of(context).size.width;
-    final messageWidth = MediaQuery.of(context).size.width / 1.5;
 
     return InkWell(
-        onLongPress: () {
-          _showBottomSheet(isMe);
-        },
-        child: isMe ? _blueMessage() : _whiteMessage());
+      onTap: () {
+        if (widget.message.type == Type.image) {
+          showFullScreenImage(context, widget.message.msg!);
+        }
+      },
+      onLongPress: () {
+        _showBottomSheet(isMe);
+      },
+      child: isMe ? _blueMessage() : _whiteMessage(),
+    );
   }
 
   Widget _whiteMessage() {

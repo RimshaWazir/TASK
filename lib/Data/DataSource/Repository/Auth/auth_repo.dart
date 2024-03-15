@@ -4,9 +4,11 @@ import '../../Resources/imports.dart';
 class AuthRepository {
   final APIs _authService;
   AuthRepository(this._authService);
+
   signInWithGoogle(BuildContext context) {
     const CircularProgressIndicator();
-    APIs().signInWithGoogle();
+
+    _authService.signInWithGoogle(context);
   }
 
   Future<void> saveUserDataInPreferences(String key, String value) async {
