@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'package:dummy/Presentation/Commons/ContextWidgets/success_snackbar.dart';
+
 import '../../../../../Data/DataSource/Resources/imports.dart';
 
 class MessageCard extends StatelessWidget {
@@ -29,16 +31,13 @@ class _MessageCardState extends State<_MessageCardStateful> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.black,
-            iconTheme: const IconThemeData(color: Colors.white),
-            elevation: 0,
-          ),
-          body: Center(
-            child: Image.network(
-              imageUrl,
-              fit: BoxFit.fitHeight,
+        builder: (_) => SafeArea(
+          child: Scaffold(
+            body: Center(
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.fitHeight,
+              ),
             ),
           ),
         ),
@@ -228,80 +227,100 @@ class _MessageCardState extends State<_MessageCardStateful> {
 
   void _showBottomSheet(bool isMe) {
     showModalBottomSheet(
-        context: context,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-        builder: (_) {
-          return ListView(
-            shrinkWrap: true,
-            children: [
-              widget.message.type == Type.text
-                  ?
-                  //copy option
-                  _OptionItem(
-                      icon: const Icon(Icons.copy_all_rounded,
-                          color: Colors.blue, size: 26),
-                      name: 'Copy Text',
-                      onTap: () async {
-                        await Clipboard.setData(
-                                ClipboardData(text: widget.message.msg!))
-                            .then((value) {
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      builder: (_) {
+        return ListView(
+          shrinkWrap: true,
+          children: [
+            widget.message.type == Type.text
+                ?
+                //copy option
+                _OptionItem(
+                    icon: const Icon(
+                      Icons.copy_all_rounded,
+                      color: Colors.blue,
+                      size: 26,
+                    ),
+                    name: 'Copy Text',
+                    onTap: () async {
+                      await Clipboard.setData(
+                        ClipboardData(text: widget.message.msg!),
+                      ).then((value) {
+                        Navigator.pop(context);
+                        log("copy message");
+                      });
+                    },
+                  )
+                :
+                //save option
+                _OptionItem(
+                    icon: const Icon(
+                      Icons.download_rounded,
+                      color: Colors.blue,
+                      size: 26,
+                    ),
+                    name: 'Save Image',
+                    onTap: () async {
+                      try {
+                        log('Image Url: ${widget.message.msg}');
+                        await GallerySaver.saveImage(
+                          widget.message.msg!,
+                          albumName: 'We Chat',
+                        ).then((value) {
                           Navigator.pop(context);
 
-                          log("copy message");
+                          successSnackBar(
+                            text: "Saved SuccessFully",
+                            context: context,
+                            bgColor: Colors.blue,
+                          );
                         });
-                      })
-                  :
-                  //save option
-                  _OptionItem(
-                      icon: const Icon(Icons.download_rounded,
-                          color: Colors.blue, size: 26),
-                      name: 'Save Image',
-                      onTap: () async {
-                        try {
-                          log('Image Url: ${widget.message.msg}');
-                          await GallerySaver.saveImage(widget.message.msg!,
-                                  albumName: 'We Chat')
-                              .then((success) {
-                            //for hiding bottom sheet
-                            Navigator.pop(context);
-                            if (success != null && success) {
-                              log('Image Successfully Saved!');
-                            }
-                          });
-                        } catch (e) {
-                          log('ErrorWhileSavingImg: $e');
-                        }
-                      }),
+                      } catch (e) {
+                        log('Error : $e');
+                      }
+                    },
+                  ),
 
-              //edit option
-              if (widget.message.type == Type.text && isMe)
-                _OptionItem(
-                    icon: const Icon(Icons.edit, color: Colors.blue, size: 26),
-                    name: 'Edit Message',
-                    onTap: () {
-                      //for hiding bottom sheet
-                      Navigator.pop(context);
+            //edit option
+            if (widget.message.type == Type.text && isMe)
+              _OptionItem(
+                icon: const Icon(
+                  Icons.edit,
+                  color: Colors.blue,
+                  size: 26,
+                ),
+                name: 'Edit Message',
+                onTap: () {
+                  Navigator.pop(context);
+                  _showMessageUpdateDialog();
+                },
+              ),
 
-                      _showMessageUpdateDialog();
-                    }),
-
-              //delete option
-              if (isMe)
-                _OptionItem(
-                    icon: const Icon(Icons.delete_forever,
-                        color: Colors.red, size: 26),
-                    name: 'Delete Message',
-                    onTap: () async {
-                      await APIs().deleteMessage(widget.message).then((value) {
-                        //for hiding bottom sheet
-                        Navigator.pop(context);
-                      });
-                    }),
-            ],
-          );
-        });
+            //delete option
+            if (isMe)
+              _OptionItem(
+                icon: const Icon(
+                  Icons.delete_forever,
+                  color: Colors.red,
+                  size: 26,
+                ),
+                name: 'Delete Message',
+                onTap: () async {
+                  await APIs().deleteMessage(widget.message).then((value) {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+          ],
+        );
+      },
+    );
   }
 
   //dialog for updating message content

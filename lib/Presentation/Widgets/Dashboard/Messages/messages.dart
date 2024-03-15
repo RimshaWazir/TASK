@@ -200,10 +200,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   return scrollData == true
                       ? GestureDetector(
                           onTap: () {
-                            _scrollController.animateTo(
-                                _scrollController.position.minScrollExtent,
-                                duration: const Duration(milliseconds: 500),
-                                curve: Curves.bounceInOut);
+                            _scrollController.jumpTo(
+                              _scrollController.position.minScrollExtent,
+                            );
                           },
                           child: Card(
                             elevation: 4,
@@ -280,6 +279,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   // bottom chat input field
+
   Widget _chatInput() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
