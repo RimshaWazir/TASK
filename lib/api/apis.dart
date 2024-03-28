@@ -81,7 +81,7 @@ class APIs {
           headers: {
             HttpHeaders.contentTypeHeader: 'application/json',
             HttpHeaders.authorizationHeader:
-                'key=AAAAQ0Bf7ZA:APA91bGd5IN5v43yedFDo86WiSuyTERjmlr4tyekbw_YW6JrdLFblZcbHdgjDmogWLJ7VD65KGgVbETS0Px7LnKk8NdAz4Z-AsHRp9WoVfArA5cNpfMKcjh_MQI-z96XQk5oIDUwx8D1'
+                'key=AAAA9VfKV48:APA91bF-IytObP-i9BHOO-6ntodZkRX8ncP_vIa4B-h3G3s-TQHFQjHbhU7LWNYxj2Clb5g1H78qXVHrVUqgvOu2k3DOnbxh0dqIdht43i5oDjgMFRKN_Wvt1PpVfI9QsygI-RnDj9Qv'
           },
           body: jsonEncode(body));
       log('Response status: ${res.statusCode}');
@@ -139,6 +139,21 @@ class APIs {
         await createUser().then((value) => getSelfInfo());
       }
     });
+  }
+
+// Method to fetch notification count for the current user
+  static Future<int> fetchNotificationCount() async {
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
+        .collection('notification_counts')
+        .doc(user.uid)
+        .get();
+
+    if (snapshot.exists) {
+      return snapshot.data()!['count'] ?? 0;
+    } else {
+      return 0;
+    }
   }
 
   // for creating a new user

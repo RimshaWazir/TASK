@@ -14,7 +14,7 @@ late Size mq;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
+  mq = MediaQueryData.fromView(WidgetsBinding.instance.window).size;
   //enter full-screen
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
 _initializeFirebase() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  var result = await FlutterNotificationChannel.registerNotificationChannel(
+  var result = await FlutterNotificationChannel().registerNotificationChannel(
       description: 'For Showing Message Notification',
       id: 'chats',
       importance: NotificationImportance.IMPORTANCE_HIGH,
