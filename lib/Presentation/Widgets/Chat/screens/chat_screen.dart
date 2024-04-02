@@ -2,17 +2,17 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dummy/Application/Services/ApiServices/apis.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../api/apis.dart';
-import '../helper/my_date_util.dart';
-import '../main.dart';
-import '../models/chat_user.dart';
-import '../models/message.dart';
-import '../widgets/message_card.dart';
+import '../../../../Data/DataSource/Resources/my_date_util.dart';
+import '../../../../main.dart';
+import '../../../../Domain/AuthModel/chat_user.dart';
+import '../../../../Domain/ChatModel/message.dart';
+import '../../../Commons/message_card.dart';
 import 'view_profile_screen.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -65,7 +65,7 @@ class _ChatScreenState extends State<ChatScreen> {
               children: [
                 Expanded(
                   child: StreamBuilder(
-                    stream: APIs.getAllMessages(widget.user),
+                    stream: APIsService.getAllMessages(widget.user),
                     builder: (context, snapshot) {
                       switch (snapshot.connectionState) {
                         //if data is loading
@@ -148,7 +148,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   builder: (_) => ViewProfileScreen(user: widget.user)));
         },
         child: StreamBuilder(
-            stream: APIs.getUserInfo(widget.user),
+            stream: APIsService.getUserInfo(widget.user),
             builder: (context, snapshot) {
               final data = snapshot.data?.docs;
               final list =
@@ -263,7 +263,8 @@ class _ChatScreenState extends State<ChatScreen> {
                         for (var i in images) {
                           log('Image Path: ${i.path}');
                           setState(() => _isUploading = true);
-                          await APIs.sendChatImage(widget.user, File(i.path));
+                          await APIsService.sendChatImage(
+                              widget.user, File(i.path));
                           setState(() => _isUploading = false);
                         }
                       },
@@ -282,7 +283,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           log('Image Path: ${image.path}');
                           setState(() => _isUploading = true);
 
-                          await APIs.sendChatImage(
+                          await APIsService.sendChatImage(
                               widget.user, File(image.path));
                           setState(() => _isUploading = false);
                         }
@@ -303,11 +304,11 @@ class _ChatScreenState extends State<ChatScreen> {
               if (_textController.text.isNotEmpty) {
                 if (_list.isEmpty) {
                   //on first message (add user to my_user collection of chat user)
-                  APIs.sendFirstMessage(
+                  APIsService.sendFirstMessage(
                       widget.user, _textController.text, Type.text);
                 } else {
                   //simply send message
-                  APIs.sendMessage(
+                  APIsService.sendMessage(
                       widget.user, _textController.text, Type.text);
                 }
                 _textController.text = '';

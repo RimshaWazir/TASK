@@ -25,7 +25,8 @@ class ChatUser {
     about = json['about'] ?? '';
     name = json['name'] ?? '';
     createdAt = json['created_at'] ?? '';
-    isOnline = json['is_online'] ?? '';
+    isOnline = json['is_online'] == true.toString();
+
     id = json['id'] ?? '';
     lastActive = json['last_active'] ?? '';
     email = json['email'] ?? '';

@@ -8,10 +8,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart';
 
-import '../models/chat_user.dart';
-import '../models/message.dart';
+import '../../../Domain/AuthModel/chat_user.dart';
+import '../../../Domain/ChatModel/message.dart';
 
-class APIs {
+class APIsService {
   // for authentication
   static FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -77,13 +77,14 @@ class APIs {
         // },
       };
 
-      var res = await post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
-          headers: {
-            HttpHeaders.contentTypeHeader: 'application/json',
-            HttpHeaders.authorizationHeader:
-                'key=AAAA9VfKV48:APA91bF-IytObP-i9BHOO-6ntodZkRX8ncP_vIa4B-h3G3s-TQHFQjHbhU7LWNYxj2Clb5g1H78qXVHrVUqgvOu2k3DOnbxh0dqIdht43i5oDjgMFRKN_Wvt1PpVfI9QsygI-RnDj9Qv'
-          },
-          body: jsonEncode(body));
+      var res =
+          await post(Uri.parse('https://fcm.googleAPIsService.com/fcm/send'),
+              headers: {
+                HttpHeaders.contentTypeHeader: 'application/json',
+                HttpHeaders.authorizationHeader:
+                    'AAAA9VfKV48:APA91bF-IytObP-i9BHOO-6ntodZkRX8ncP_vIa4B-h3G3s-TQHFQjHbhU7LWNYxj2Clb5g1H78qXVHrVUqgvOu2k3DOnbxh0dqIdht43i5oDjgMFRKN_Wvt1PpVfI9QsygI-RnDj9Qv'
+              },
+              body: jsonEncode(body));
       log('Response status: ${res.statusCode}');
       log('Response body: ${res.body}');
     } catch (e) {
@@ -125,6 +126,23 @@ class APIs {
     }
   }
 
+  static Future<int> fetchUnreadMessageCount(ChatUser chatUser) async {
+    // Query to fetch unread messages
+    QuerySnapshot<Map<String, dynamic>> unreadMessagesSnapshot = await firestore
+        .collection('chats/${getConversationID(chatUser.id)}/messages/')
+        .where('read', isEqualTo: '')
+        .get();
+    return unreadMessagesSnapshot.docs.length;
+  }
+
+  static Future<int> fetchReadMessageCount(ChatUser chatUser) async {
+    QuerySnapshot<Map<String, dynamic>> readMessagesSnapshot = await firestore
+        .collection('chats/${getConversationID(chatUser.id)}/messages/')
+        .where('read', isNotEqualTo: '')
+        .get();
+    return readMessagesSnapshot.docs.length;
+  }
+
   // for getting current user info
   static Future<void> getSelfInfo() async {
     await firestore.collection('users').doc(user.uid).get().then((user) async {
@@ -133,7 +151,7 @@ class APIs {
         await getFirebaseMessagingToken();
 
         //for setting user status to active
-        APIs.updateActiveStatus(true);
+        APIsService.updateActiveStatus(true);
         log('My Data: ${user.data()}');
       } else {
         await createUser().then((value) => getSelfInfo());
@@ -262,7 +280,7 @@ class APIs {
     });
   }
 
-  ///************** Chat Screen Related APIs **************
+  ///************** Chat Screen Related APIsService **************
 
   // chats (collection) --> conversation_id (doc) --> messages (collection) --> message (doc)
 

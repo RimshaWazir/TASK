@@ -1,15 +1,15 @@
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dummy/Application/Services/ApiServices/apis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 
-import '../api/apis.dart';
-import '../helper/dialogs.dart';
-import '../helper/my_date_util.dart';
-import '../main.dart';
-import '../models/message.dart';
+import '../../Data/DataSource/Dialogs/dialogs.dart';
+import '../../Data/DataSource/Resources/my_date_util.dart';
+import '../../main.dart';
+import '../../Domain/ChatModel/message.dart';
 
 // for showing single message details
 class MessageCard extends StatefulWidget {
@@ -24,7 +24,7 @@ class MessageCard extends StatefulWidget {
 class _MessageCardState extends State<MessageCard> {
   @override
   Widget build(BuildContext context) {
-    bool isMe = APIs.user.uid == widget.message.fromId;
+    bool isMe = APIsService.user.uid == widget.message.fromId;
     return InkWell(
         onLongPress: () {
           _showBottomSheet(isMe);
@@ -36,7 +36,7 @@ class _MessageCardState extends State<MessageCard> {
   Widget _blueMessage() {
     //update last read message if sender and receiver are different
     if (widget.message.read.isEmpty) {
-      APIs.updateMessageReadStatus(widget.message);
+      APIsService.updateMessageReadStatus(widget.message);
     }
 
     return Row(
@@ -253,7 +253,8 @@ class _MessageCardState extends State<MessageCard> {
                         color: Colors.red, size: 26),
                     name: 'Delete Message',
                     onTap: () async {
-                      await APIs.deleteMessage(widget.message).then((value) {
+                      await APIsService.deleteMessage(widget.message)
+                          .then((value) {
                         //for hiding bottom sheet
                         Navigator.pop(context);
                       });
@@ -299,8 +300,8 @@ class _MessageCardState extends State<MessageCard> {
                   borderRadius: BorderRadius.circular(20)),
 
               //title
-              title: Row(
-                children: const [
+              title: const Row(
+                children: [
                   Icon(
                     Icons.message,
                     color: Colors.blue,
@@ -338,7 +339,7 @@ class _MessageCardState extends State<MessageCard> {
                     onPressed: () {
                       //hide alert dialog
                       Navigator.pop(context);
-                      APIs.updateMessage(widget.message, updatedMsg);
+                      APIsService.updateMessage(widget.message, updatedMsg);
                     },
                     child: const Text(
                       'Update',

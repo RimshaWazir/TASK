@@ -1,12 +1,13 @@
 import 'dart:developer';
 
+import 'package:dummy/Application/Services/ApiServices/apis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../main.dart';
-import '../api/apis.dart';
-import 'auth/login_screen.dart';
-import 'home_screen.dart';
+import '../../../main.dart';
+
+import '../../Presentation/Widgets/Auth/login_screen.dart';
+import '../../Presentation/Widgets/Dashboard/home_screen.dart';
 
 //splash screen
 class SplashScreen extends StatefulWidget {
@@ -27,11 +28,11 @@ class _SplashScreenState extends State<SplashScreen> {
           systemNavigationBarColor: Colors.white,
           statusBarColor: Colors.white));
 
-      if (APIs.auth.currentUser != null) {
-        log('\nUser: ${APIs.auth.currentUser}');
+      if (APIsService.auth.currentUser != null) {
+        log('\nUser: ${APIsService.auth.currentUser}');
         //navigate to home screen
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (_) => const DashboardScreen()));
       } else {
         //navigate to login screen
         Navigator.pushReplacement(
@@ -42,11 +43,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //initializing media query (for getting device screen size)
     mq = MediaQuery.of(context).size;
 
     return const Scaffold(
-        //body
         body: Center(
       child: Text("Splash Screen"),
     ));

@@ -1,14 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dummy/Application/Services/ApiServices/apis.dart';
 import 'package:dummy/Data/DataSource/Resources/textstyle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../api/apis.dart';
-import '../helper/my_date_util.dart';
-import '../main.dart';
-import '../models/chat_user.dart';
-import '../models/message.dart';
-import '../screens/chat_screen.dart';
+import '../../Data/DataSource/Resources/my_date_util.dart';
+import '../../main.dart';
+import '../../Domain/AuthModel/chat_user.dart';
+import '../../Domain/ChatModel/message.dart';
+import '../Widgets/Chat/screens/chat_screen.dart';
 
 //card to represent a single user in home screen
 class ChatUserCard extends StatefulWidget {
@@ -28,7 +27,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
   @override
   void initState() {
     super.initState();
-    APIs.fetchNotificationCount().then((count) {
+    APIsService.fetchNotificationCount().then((count) {
       setState(() {
         notificationCount = count;
       });
@@ -44,7 +43,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
               MaterialPageRoute(builder: (_) => ChatScreen(user: widget.user)));
         },
         child: StreamBuilder(
-          stream: APIs.getLastMessage(widget.user),
+          stream: APIsService.getLastMessage(widget.user),
           builder: (context, snapshot) {
             final data = snapshot.data?.docs;
             final list =
@@ -85,7 +84,8 @@ class _ChatUserCardState extends State<ChatUserCard> {
               //last message time
               trailing: _message == null
                   ? null //show nothing when no message is sent
-                  : _message!.read.isEmpty && _message!.fromId != APIs.user.uid
+                  : _message!.read.isEmpty &&
+                          _message!.fromId != APIsService.user.uid
                       ?
                       //show for unread message
                       Container(

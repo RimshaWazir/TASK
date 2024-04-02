@@ -1,12 +1,14 @@
 import 'dart:developer';
 
-import 'package:dummy/screens/splash_screen.dart';
+import 'package:dummy/Data/DataSource/splash_screen.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_notification_channel/flutter_notification_channel.dart';
 import 'package:flutter_notification_channel/notification_importance.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+
 import 'firebase_options.dart';
 
 //global object for accessing device screen size
@@ -27,8 +29,18 @@ void main() {
   });
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,11 +62,20 @@ class MyApp extends StatelessWidget {
 
 _initializeFirebase() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    badge: true,
+  );
   var result = await FlutterNotificationChannel().registerNotificationChannel(
       description: 'For Showing Message Notification',
       id: 'chats',
       importance: NotificationImportance.IMPORTANCE_HIGH,
       name: 'Chats');
   log('\nNotification Channel Result: $result');
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print('Handling a background message ${message.messageId}');
 }
