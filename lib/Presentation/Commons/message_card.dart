@@ -1,17 +1,14 @@
 import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dummy/Application/Services/ApiServices/apis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gallery_saver/gallery_saver.dart';
-
 import '../../Data/DataSource/Dialogs/dialogs.dart';
 import '../../Data/DataSource/Resources/my_date_util.dart';
 import '../../main.dart';
 import '../../Domain/ChatModel/message.dart';
 
-// for showing single message details
 class MessageCard extends StatefulWidget {
   const MessageCard({super.key, required this.message});
 
@@ -29,35 +26,31 @@ class _MessageCardState extends State<MessageCard> {
         onLongPress: () {
           _showBottomSheet(isMe);
         },
-        child: isMe ? _greenMessage() : _blueMessage());
+        child: isMe ? _whiteMessage() : _blueMessage());
   }
 
-  // sender or another user message
   Widget _blueMessage() {
-    //update last read message if sender and receiver are different
     if (widget.message.read.isEmpty) {
       APIsService.updateMessageReadStatus(widget.message);
     }
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        //message content
-        Flexible(
-          child: Container(
+    return Flexible(
+      child: Column(
+        children: [
+          Container(
             padding: EdgeInsets.all(widget.message.type == Type.image
-                ? mq.width * .03
+                ? mq.width * .06
                 : mq.width * .04),
             margin: EdgeInsets.symmetric(
                 horizontal: mq.width * .04, vertical: mq.height * .01),
             decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 221, 245, 255),
+                color: Colors.blue,
                 border: Border.all(color: Colors.lightBlue),
                 //making borders curved
                 borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                    bottomRight: Radius.circular(30))),
+                    topLeft: Radius.circular(8),
+                    topRight: Radius.circular(16),
+                    bottomLeft: Radius.circular(16),
+                    bottomRight: Radius.circular(16))),
             child: widget.message.type == Type.text
                 ?
                 //show text
@@ -67,77 +60,59 @@ class _MessageCardState extends State<MessageCard> {
                   )
                 :
                 //show image
-                ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: CachedNetworkImage(
-                      imageUrl: widget.message.msg,
-                      placeholder: (context, url) => const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: CircularProgressIndicator(strokeWidth: 2),
+                GestureDetector(
+                    onTap: () {
+                      _showImageScreen(context, widget.message.msg);
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: CachedNetworkImage(
+                        imageUrl: widget.message.msg,
+                        placeholder: (context, url) => const Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.image, size: 70),
                       ),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.image, size: 70),
                     ),
                   ),
           ),
-        ),
-
-        //message time
-        Padding(
-          padding: EdgeInsets.only(right: mq.width * .04),
-          child: Text(
-            MyDateUtil.getFormattedTime(
-                context: context, time: widget.message.sent),
-            style: const TextStyle(fontSize: 13, color: Colors.black54),
-          ),
-        ),
-      ],
-    );
-  }
-
-  // our or user message
-  Widget _greenMessage() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        //message time
-        Row(
-          children: [
-            //for adding some space
-            SizedBox(width: mq.width * .04),
-
-            //double tick blue icon for message read
-            if (widget.message.read.isNotEmpty)
-              const Icon(Icons.done_all_rounded, color: Colors.blue, size: 20),
-
-            //for adding some space
-            const SizedBox(width: 2),
-
-            //sent time
-            Text(
+          Padding(
+            padding: EdgeInsets.only(left: mq.width * .04),
+            child: Text(
               MyDateUtil.getFormattedTime(
                   context: context, time: widget.message.sent),
               style: const TextStyle(fontSize: 13, color: Colors.black54),
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
+    );
+  }
 
-        //message content
-        Flexible(
-          child: Container(
+  // our or user message
+  Widget _whiteMessage() {
+    return Flexible(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
             padding: EdgeInsets.all(widget.message.type == Type.image
-                ? mq.width * .03
+                ? mq.width * .06
                 : mq.width * .04),
             margin: EdgeInsets.symmetric(
-                horizontal: mq.width * .04, vertical: mq.height * .01),
+                horizontal: mq.width * .05, vertical: mq.height * .01),
             decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 218, 255, 176),
-                border: Border.all(color: Colors.lightGreen),
+                color: Colors.white,
+                border: Border.all(color: Colors.white),
                 //making borders curved
                 borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                    bottomLeft: Radius.circular(30))),
+                    bottomRight: Radius.circular(16),
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(8),
+                    bottomLeft: Radius.circular(16))),
             child: widget.message.type == Type.text
                 ?
                 //show text
@@ -147,21 +122,34 @@ class _MessageCardState extends State<MessageCard> {
                   )
                 :
                 //show image
-                ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: CachedNetworkImage(
-                      imageUrl: widget.message.msg,
-                      placeholder: (context, url) => const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: CircularProgressIndicator(strokeWidth: 2),
+                GestureDetector(
+                    onTap: () {
+                      _showImageScreen(context, widget.message.msg);
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: CachedNetworkImage(
+                        imageUrl: widget.message.msg,
+                        placeholder: (context, url) => const Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.image, size: 70),
                       ),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.image, size: 70),
                     ),
                   ),
           ),
-        ),
-      ],
+          Padding(
+            padding: EdgeInsets.only(right: mq.width * .04),
+            child: Text(
+              MyDateUtil.getFormattedTime(
+                  context: context, time: widget.message.sent),
+              style: const TextStyle(fontSize: 13, color: Colors.black54),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -276,7 +264,7 @@ class _MessageCardState extends State<MessageCard> {
 
               //read time
               _OptionItem(
-                  icon: const Icon(Icons.remove_red_eye, color: Colors.green),
+                  icon: const Icon(Icons.remove_red_eye, color: Colors.white),
                   name: widget.message.read.isEmpty
                       ? 'Read At: Not seen yet'
                       : 'Read At: ${MyDateUtil.getMessageTime(context: context, time: widget.message.read)}',
@@ -379,4 +367,30 @@ class _OptionItem extends StatelessWidget {
           ]),
         ));
   }
+}
+
+void _showImageScreen(BuildContext context, String imageUrl) {
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (context) => Scaffold(
+        body: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: Center(
+            child: Image.network(
+              imageUrl,
+              fit: BoxFit.contain,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return const CircularProgressIndicator();
+              },
+              errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.error),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
 }

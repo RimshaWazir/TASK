@@ -1,8 +1,13 @@
 import 'dart:developer';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dummy/Application/Services/ApiServices/apis.dart';
+import 'package:dummy/Application/Services/Navigation/navigation.dart';
 import 'package:dummy/Data/DataSource/Resources/gap.dart';
+import 'package:dummy/Data/DataSource/Resources/strings.dart';
+import 'package:dummy/Data/DataSource/Resources/textstyle.dart';
 import 'package:dummy/Presentation/Widgets/Auth/login_screen.dart';
+import 'package:dummy/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -77,7 +82,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          toolbarHeight: 200,
+          toolbarHeight: 100,
           automaticallyImplyLeading: false,
           title: Container(
             width: double.infinity,
@@ -115,8 +120,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   await GoogleSignIn().signOut().then((value) {
                     APIsService.auth = FirebaseAuth.instance;
 
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (_) => const LoginScreen()));
+                    Navigate.toReplace(context, const LoginScreen());
                   });
                 });
               },
@@ -125,12 +129,66 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ],
         ),
         body: _list.isNotEmpty
-            ? ListView.builder(
-                itemCount: _isSearching ? _searchList.length : _list.length,
-                itemBuilder: (context, index) {
-                  final user = _isSearching ? _searchList[index] : _list[index];
-                  return ChatUserCard(user: user);
-                },
+            ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(AppStrings.recently,
+                        style: MyTextStyles.urbanist20(context)),
+                    Gap.verticalSpace(14),
+                    SizedBox(
+                      width: double.infinity,
+                      height: mq.height * .1,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        separatorBuilder: (context, index) => const SizedBox(
+                          width: 5,
+                        ),
+                        itemCount: _list.length,
+                        itemBuilder: (context, index) {
+                          final user = _list[index];
+                          return Column(
+                            children: [
+                              ClipRRect(
+                                borderRadius:
+                                    BorderRadius.circular(mq.height * .03),
+                                child: CachedNetworkImage(
+                                  width: mq.height * .055,
+                                  height: mq.height * .055,
+                                  imageUrl: user.image,
+                                  errorWidget: (context, url, error) =>
+                                      const CircleAvatar(
+                                          child: Icon(CupertinoIcons.person)),
+                                ),
+                              ),
+                              Gap.verticalSpace(5),
+                              //user name
+                              Text(user.name,
+                                  style: MyTextStyles.urbanist14(context)),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                    Gap.verticalSpace(14),
+                    Text(AppStrings.messages,
+                        style: MyTextStyles.urbanist20(context)),
+                    Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount:
+                            _isSearching ? _searchList.length : _list.length,
+                        itemBuilder: (context, index) {
+                          final user =
+                              _isSearching ? _searchList[index] : _list[index];
+                          return ChatUserCard(user: user);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               )
             : const Center(
                 child: Text('No Users Found!', style: TextStyle(fontSize: 20)),

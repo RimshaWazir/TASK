@@ -3,6 +3,9 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dummy/Application/Services/ApiServices/apis.dart';
+import 'package:dummy/Application/Services/Navigation/navigation.dart';
+import 'package:dummy/Data/DataSource/Resources/gap.dart';
+import 'package:dummy/Data/DataSource/Resources/textstyle.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +16,6 @@ import '../../../../main.dart';
 import '../../../../Domain/AuthModel/chat_user.dart';
 import '../../../../Domain/ChatModel/message.dart';
 import '../../../Commons/message_card.dart';
-import 'view_profile_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   final ChatUser user;
@@ -54,11 +56,14 @@ class _ChatScreenState extends State<ChatScreen> {
           child: Scaffold(
             //app bar
             appBar: AppBar(
+              backgroundColor: const Color.fromARGB(255, 234, 246, 252),
+              surfaceTintColor: const Color.fromARGB(255, 234, 246, 255),
               automaticallyImplyLeading: false,
+              toolbarHeight: mq.height * .1,
               flexibleSpace: _appBar(),
             ),
 
-            backgroundColor: const Color.fromARGB(255, 234, 248, 255),
+            backgroundColor: const Color.fromARGB(255, 234, 246, 255),
 
             //body
             body: Column(
@@ -140,62 +145,42 @@ class _ChatScreenState extends State<ChatScreen> {
 
   // app bar widget
   Widget _appBar() {
-    return InkWell(
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => ViewProfileScreen(user: widget.user)));
-        },
-        child: StreamBuilder(
-            stream: APIsService.getUserInfo(widget.user),
-            builder: (context, snapshot) {
-              final data = snapshot.data?.docs;
-              final list =
-                  data?.map((e) => ChatUser.fromJson(e.data())).toList() ?? [];
+    return StreamBuilder(
+        stream: APIsService.getUserInfo(widget.user),
+        builder: (context, snapshot) {
+          final data = snapshot.data?.docs;
+          final list =
+              data?.map((e) => ChatUser.fromJson(e.data())).toList() ?? [];
 
-              return Row(
+          return Row(
+            children: [
+              IconButton(
+                  onPressed: () {
+                    Navigate.pop(context);
+                  },
+                  icon: const Icon(Icons.arrow_back_ios)),
+              //user name & last seen time
+              Gap.horizontalSpace(35),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  //back button
-                  IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon:
-                          const Icon(Icons.arrow_back, color: Colors.black54)),
-
-                  //user profile picture
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(mq.height * .03),
-                    child: CachedNetworkImage(
-                      width: mq.height * .05,
-                      height: mq.height * .05,
-                      imageUrl:
-                          list.isNotEmpty ? list[0].image : widget.user.image,
-                      errorWidget: (context, url, error) => const CircleAvatar(
-                          child: Icon(CupertinoIcons.person)),
-                    ),
+                  //user name
+                  Text(
+                    list.isNotEmpty ? list[0].name : widget.user.name,
+                    style:
+                        MyTextStyles.urbanist20(context).copyWith(fontSize: 24),
                   ),
 
                   //for adding some space
-                  const SizedBox(width: 10),
+                  const SizedBox(height: 2),
 
-                  //user name & last seen time
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //user name
-                      Text(list.isNotEmpty ? list[0].name : widget.user.name,
-                          style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w500)),
-
-                      //for adding some space
-                      const SizedBox(height: 2),
-
-                      //last seen time of user
-                      Text(
-                          list.isNotEmpty
+                  //last seen time of user
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: list.isNotEmpty
                               ? list[0].isOnline
                                   ? 'Online'
                                   : MyDateUtil.getLastActiveTime(
@@ -204,13 +189,21 @@ class _ChatScreenState extends State<ChatScreen> {
                               : MyDateUtil.getLastActiveTime(
                                   context: context,
                                   lastActive: widget.user.lastActive),
-                          style: const TextStyle(
-                              fontSize: 13, color: Colors.black54)),
-                    ],
+                          style: MyTextStyles.urbanist14(context).copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: list.isNotEmpty && list[0].isOnline
+                                ? Colors.green
+                                : Colors.black54,
+                          ),
+                        ),
+                      ],
+                    ),
                   )
                 ],
-              );
-            }));
+              )
+            ],
+          );
+        });
   }
 
   // bottom chat input field
@@ -318,7 +311,7 @@ class _ChatScreenState extends State<ChatScreen> {
             padding:
                 const EdgeInsets.only(top: 10, bottom: 10, right: 5, left: 10),
             shape: const CircleBorder(),
-            color: Colors.green,
+            color: Colors.blue,
             child: const Icon(Icons.send, color: Colors.white, size: 28),
           )
         ],

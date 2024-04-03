@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 
 class MyDateUtil {
@@ -5,6 +6,7 @@ class MyDateUtil {
   static String getFormattedTime(
       {required BuildContext context, required String time}) {
     final date = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
+    log(TimeOfDay.fromDateTime(date).format(context).toString());
     return TimeOfDay.fromDateTime(date).format(context);
   }
 
@@ -69,7 +71,7 @@ class MyDateUtil {
 
     String month = _getMonth(time);
 
-    return 'Last seen on ${time.day} $month on $formattedTime';
+    return 'Last seen ${time.day} $month on $formattedTime';
   }
 
   // get month name from month no. or index

@@ -51,7 +51,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
             if (list.isNotEmpty) _message = list[0];
 
             return ListTile(
-              contentPadding: const EdgeInsets.all(10),
+              contentPadding: const EdgeInsets.all(3),
               //user profile picture
               leading: ClipRRect(
                 borderRadius: BorderRadius.circular(mq.height * .03),

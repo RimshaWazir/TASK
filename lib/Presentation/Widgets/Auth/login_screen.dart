@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dummy/Application/Services/ApiServices/apis.dart';
+import 'package:dummy/Application/Services/Navigation/navigation.dart';
 import 'package:dummy/Data/DataSource/Resources/assets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../Data/DataSource/Dialogs/dialogs.dart';
 
-import '../Dashboard/home_screen.dart';
+import '../Dashboard/dashboard_screen.dart';
 
 //login screen -- implements google sign in or sign up feature for app
 class LoginScreen extends StatefulWidget {
@@ -26,14 +27,11 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-
-    //for auto triggering animation
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() => _isAnimate = true);
     });
   }
 
-  // handles google login button click
   _handleGoogleBtnClick() {
     //for showing progress bar
     Dialogs.showProgressBar(context);
@@ -47,12 +45,10 @@ class _LoginScreenState extends State<LoginScreen> {
         log('\nUserAdditionalInfo: ${user.additionalUserInfo}');
 
         if ((await APIsService.userExists())) {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (_) => const DashboardScreen()));
+          Navigate.toReplace(context, const DashboardScreen());
         } else {
           await APIsService.createUser().then((value) {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (_) => const DashboardScreen()));
+            Navigate.toReplace(context, const DashboardScreen());
           });
         }
       }

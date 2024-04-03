@@ -1,13 +1,14 @@
 import 'dart:developer';
 
 import 'package:dummy/Application/Services/ApiServices/apis.dart';
+import 'package:dummy/Application/Services/Navigation/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../main.dart';
 
 import '../../Presentation/Widgets/Auth/login_screen.dart';
-import '../../Presentation/Widgets/Dashboard/home_screen.dart';
+import '../../Presentation/Widgets/Dashboard/dashboard_screen.dart';
 
 //splash screen
 class SplashScreen extends StatefulWidget {
@@ -31,12 +32,10 @@ class _SplashScreenState extends State<SplashScreen> {
       if (APIsService.auth.currentUser != null) {
         log('\nUser: ${APIsService.auth.currentUser}');
         //navigate to home screen
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (_) => const DashboardScreen()));
+        Navigate.toReplace(context, const DashboardScreen());
       } else {
         //navigate to login screen
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+        Navigate.toReplace(context, const LoginScreen());
       }
     });
   }
